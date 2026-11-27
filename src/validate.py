@@ -963,7 +963,7 @@ def validate_sources(data_dir=DATA_DIR):
         "match_sources": set(),
     }
 
-    for path in sorted(raw_dir.glob("*.json")):
+    for path in sorted(raw_dir.rglob("*.json")):
         loaded = _load_event(path, data_dir, aliases, seen)
         events.append(loaded["event"])
         coverage.append(loaded["coverage"])

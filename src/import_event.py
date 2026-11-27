@@ -32,9 +32,11 @@ def import_event(source_path, data_dir=DATA_DIR):
 
     event_slug = event_id.split(":", 1)[1]
     raw_dir = data_dir / "raw"
-    destination = raw_dir / f"{event_slug}.json"
-    if destination.exists():
-        raise FileExistsError(f"event destination already exists: {destination}")
+    existing_events = sorted(raw_dir.rglob(f"{event_slug}.json"))
+    if existing_events:
+        raise FileExistsError(
+            f"event destination already exists: {existing_events[0]}"
+        )
 
     with tempfile.TemporaryDirectory(prefix="cs2-event-import-") as temporary:
         staged_data_dir = Path(temporary) / "data"
@@ -45,14 +47,33 @@ def import_event(source_path, data_dir=DATA_DIR):
         if source_dir.is_dir():
             shutil.copytree(source_dir, staged_data_dir / "source")
 
-        staged_destination = staged_data_dir / "raw" / destination.name
+        staged_destination = staged_data_dir / "raw" / f"{event_slug}.json"
         staged_destination.write_bytes(source_bytes)
-        validate_sources(staged_data_dir)
+        staged_data = validate_sources(staged_data_dir)
+        validated_event = next(
+            (
+                row
+                for row in staged_data["events"]
+                if row["event_id"] == event_id
+            ),
+            None,
+        )
+        if validated_event is None:
+            raise ValidationError(
+                f"{source_path}: imported event was not present after validation"
+            )
+
+    destination = (
+        raw_dir / validated_event["start_date"][:4] / f"{event_slug}.json"
+    )
+    if destination.exists():
+        raise FileExistsError(f"event destination already exists: {destination}")
+    destination.parent.mkdir(parents=True, exist_ok=True)
 
     descriptor, temporary_name = tempfile.mkstemp(
         prefix=f".{event_slug}.",
         suffix=".tmp",
-        dir=raw_dir,
+        dir=destination.parent,
     )
     os.close(descriptor)
     temporary_path = Path(temporary_name)

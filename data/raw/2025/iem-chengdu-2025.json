@@ -9,7 +9,11 @@
     "end_date": "2025-11-09",
     "is_major": false,
     "source_url": "https://pro.eslgaming.com/tour/cs/chengdu/",
-    "expected_match_count": 30
+    "expected_match_count": 30,
+    "provenance": {
+      "retrieved_on": "2026-11-27",
+      "verified_by": "human verified"
+    }
   },
   "matches": [
     {

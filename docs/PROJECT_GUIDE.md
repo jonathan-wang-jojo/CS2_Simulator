@@ -9,7 +9,8 @@ baseline. HLTV is the canonical source for active event and match facts.
 ## Layout
 
 - `data/entities.csv` — stable team/player IDs and sourced name aliases.
-- `data/raw/<event-id>.json` — normalized event records.
+- `data/raw/<year>/<event-id>.json` — normalized event records, grouped by
+  event start year.
 - `data/pending/` — preserved event records awaiting HLTV verification.
 - `data/source/<event-id>/` — optional captures when source terms permit them.
 - `data/reports/` — generated coverage and discrepancy reports.
@@ -76,8 +77,10 @@ fuzzy matches.
 
 ### Event files
 
-Each `data/raw/<event-id>.json` contains the event and its match records.
-`event-id` in the filename must match the JSON `event.event_id`.
+Each `data/raw/<year>/<event-id>.json` contains the event and its match
+records. The year folder is the event's start year, and validation discovers
+event JSON files recursively under `data/raw/`. `event-id` in the filename
+must match the JSON `event.event_id`.
 
 ```json
 {
@@ -192,9 +195,9 @@ a warning and are skipped by the current loader; source files remain unchanged.
 
 ### Sourced match history
 
-IEM Cologne Major 2026 Stages 1 and 2 are active in `data/raw/` with 33
-HLTV-linked series each. Stage 3 and playoffs are separate event files with 33
-and 7 series, respectively.
+IEM Chengdu 2025 is active with 30 HLTV-linked series. IEM Cologne Major 2026
+Stages 1 and 2 are active with 33 series each. Stage 3 and playoffs are
+separate event files with 33 and 7 series, respectively.
 
 ### Adding more history
 
@@ -211,8 +214,8 @@ For an existing normalized JSON export, run
 `python -m src.import_event event.json`, replacing `event.json` with the file's
 path. The importer reads a local file only, validates it against the current
 entity registry and event data, refuses to overwrite an existing event, and
-adds it to `data/raw/`. Register unknown team or player aliases in
-`data/entities.csv` first.
+adds it to `data/raw/<start-year>/`. Register unknown team or player aliases
+in `data/entities.csv` first.
 
 ### Roster history
 
@@ -254,8 +257,9 @@ second-source assertions, writes mismatches before stopping, and records
 human resolutions. Keep source records and evaluation data
 chronological: each match prediction may use only information known before
 that match date. For time-varying facts, store both the effective date and
-when the fact became known when those differ. Date fields already carry year
-information; do not split the raw store into yearly files.
+when the fact became known when those differ. Store event files under the
+folder matching the event's start year; keep `roster_stints.csv` at the root
+of `data/raw/`.
 
 ## Current model and roadmap
 
@@ -263,10 +267,10 @@ The baseline starts teams at `1500`, uses LAN/online weights, series margin,
 and 180-day rating decay, and predicts all matches on a date before applying
 that date's results.
 
-IEM Cologne Major 2026 Stages 1, 2, 3, and Playoffs are active historical
-data. Player ratings are supported but have not yet been populated. The
-backtest currently uses series results only; it does not use map or player
-ratings.
+IEM Chengdu 2025 and IEM Cologne Major 2026 Stages 1, 2, 3, and Playoffs are
+active historical data. Player ratings are supported but have not yet been
+populated. The backtest currently uses series results only; it does not use
+map or player ratings.
 
 Final ratings describe the latest recorded match, not current form, and Elo
 does not use roster stints.

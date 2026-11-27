@@ -142,9 +142,13 @@ class DataPipelineTests(unittest.TestCase):
         }
 
     def _write_event(self, document=None):
-        path = self.raw_dir / "test-event.json"
+        document = document or self._event_document()
+        event = document["event"]
+        event_slug = event["event_id"].split(":", 1)[1]
+        path = self.raw_dir / event["start_date"][:4] / f"{event_slug}.json"
+        path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(
-            json.dumps(document or self._event_document(), indent=2),
+            json.dumps(document, indent=2),
             encoding="utf-8",
         )
         return path
@@ -187,7 +191,7 @@ class DataPipelineTests(unittest.TestCase):
         return primary_capture, secondary_capture
 
     def test_rebuild_creates_normalized_database_and_is_repeatable(self):
-        raw_event = self.raw_dir / "test-event.json"
+        raw_event = self.raw_dir / "2026" / "test-event.json"
         original_event = raw_event.read_bytes()
 
         data = rebuild_database(self.data_dir, self.database)
@@ -218,6 +222,14 @@ class DataPipelineTests(unittest.TestCase):
                 ).fetchone()[0],
                 "2025-12-31",
             )
+
+    def test_validate_discovers_events_in_year_folders(self):
+        data = validate_sources(self.data_dir)
+
+        self.assertEqual(
+            [event["event_id"] for event in data["events"]],
+            ["event:test-event"],
+        )
 
     def test_player_ratings_load_at_series_and_map_scope(self):
         document = self._event_document()
@@ -419,8 +431,11 @@ class DataPipelineTests(unittest.TestCase):
         document = self._event_document()
         document["event"]["event_id"] = "event:second-event"
         document["event"]["source_url"] = "https://www.hltv.org/events/second"
+        document["event"]["start_date"] = "2025-01-01"
+        document["event"]["end_date"] = "2025-01-03"
         for index, match in enumerate(document["matches"], start=1):
             match["match_id"] = f"match:second-event-{index:03d}"
+            match["date"] = f"2025-01-0{index}"
             match["source_url"] = (
                 f"https://www.hltv.org/matches/second-{index:03d}"
             )
@@ -430,7 +445,10 @@ class DataPipelineTests(unittest.TestCase):
 
         destination = import_event(export_path, self.data_dir)
 
-        self.assertEqual(destination, self.raw_dir / "second-event.json")
+        self.assertEqual(
+            destination,
+            self.raw_dir / "2025" / "second-event.json",
+        )
         self.assertEqual(json.loads(destination.read_text(encoding="utf-8")), document)
         self.assertEqual(export_path.read_bytes(), original_export)
         self.assertEqual(len(validate_sources(self.data_dir)["events"]), 2)
@@ -444,6 +462,11 @@ class DataPipelineTests(unittest.TestCase):
     def test_import_event_rejects_invalid_export_without_copying(self):
         document = self._event_document()
         document["event"]["event_id"] = "event:second-event"
+        for index, match in enumerate(document["matches"], start=1):
+            match["match_id"] = f"match:second-event-{index:03d}"
+            match["source_url"] = (
+                f"https://www.hltv.org/matches/second-{index:03d}"
+            )
         document["matches"][0]["score_a"] = 0
         export_path = self.data_dir.parent / "invalid-event-export.json"
         export_path.write_text(json.dumps(document), encoding="utf-8")
@@ -451,7 +474,9 @@ class DataPipelineTests(unittest.TestCase):
         with self.assertRaisesRegex(ValidationError, "plausible result"):
             import_event(export_path, self.data_dir)
 
-        self.assertFalse((self.raw_dir / "second-event.json").exists())
+        self.assertFalse(
+            (self.raw_dir / "2026" / "second-event.json").exists()
+        )
         self.assertEqual(len(validate_sources(self.data_dir)["events"]), 1)
 
     def test_import_event_refuses_to_overwrite(self):
