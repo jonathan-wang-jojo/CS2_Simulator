@@ -3,7 +3,7 @@
 ## Roles
 
 - **Planner (read-only):** Read relevant guidance, code, data, and tests.
-  Return a brief plan with goal, scope, files, checks, and open risks. Ask
+  Return a brief plan in docs with goal, scope, files, checks, and open risks. Ask
   before decisions that change scope, data formats, dependencies, or behavior.
 - **Implementer:** Make only approved changes and directly needed tests or
   docs. Stop rather than guess when a new design choice appears.
@@ -17,7 +17,7 @@
 
 - Use **Plan → Implement → Trim → Review**. Each stage keeps its own
   responsibilities; do not launch agents just to represent these stages.
-- `Plan only:` stops after planning. `Implement:` plans first, then proceeds
+- `Plan:` stops after planning. `Implement:` plans first, then proceeds
   when scope is clear. `Trim:` and `Review:` perform only that stage.
 - Use a temporary PR plan only for multi-step handoffs. Keep PR-only steps
   there; move lasting project guidance to `AGENTS.md` or
