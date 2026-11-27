@@ -33,6 +33,9 @@ responsibilities, not a requirement to launch separate agents.
   already available elsewhere, and consistent with this repository?
 - Remove redundancy, dead code, unnecessary comments, and avoidable
   indirection while preserving approved behavior.
+- Before a major refactor or removal, ask the user what the component is for
+  and whether it is still needed; explain dependencies and alternatives,
+  especially when files, schemas, or public behavior are affected.
 - Do not add features or change the approved behavior during trimming.
 - Do not delete pre-existing code or source data without explicit approval.
   If simplification requires a design choice, send it back to planning.

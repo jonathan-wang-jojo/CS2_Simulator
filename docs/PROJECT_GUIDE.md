@@ -27,13 +27,8 @@ quality.
 
 ## Contribution workflow
 
-Feature work follows **Plan → Implement → Trim → Review**. The planner is
-read-only; implementation stays within the agreed plan; trimming removes
-unneeded complexity without adding behavior; review is read-only and verifies
-the result. Material choices about scope, schema, destructive edits, or
-dependencies are brought back for discussion. See `AGENTS.md` for role
-permissions, hand-offs, and the `Plan only:`, `Implement:`, `Trim:`, and
-`Review:` request labels.
+Follow **Plan → Implement → Trim → Review** and the role permissions in
+[AGENTS.md](../AGENTS.md).
 
 ## Source data
 
@@ -137,14 +132,7 @@ The rebuild validates every source before writing a temporary database, checks
 SQLite integrity, then atomically replaces `data/cs.db`. A failed validation
 leaves the previous database and all raw files untouched.
 
-Run commands from this directory:
-
-```text
-python -m src.validate
-python -m src.load
-python -m src.backtest
-python -m unittest discover -s tests
-```
+Use the commands in the README's Quick start.
 
 The validator rejects unknown aliases, duplicate matches, team self-matches,
 matches outside the event window, invalid series scores, and map results that
@@ -162,22 +150,6 @@ results from that date. Its Brier score is useful only after sourced historical
 matches are entered. Evaluate by time or held-out events, never by random
 match splits.
 
-1. **Data foundation:** enter a small, well-sourced historical range and
-   verify IDs, match results, maps, and roster dates.
-2. **Team strength:** compare Elo with sourced VRS/HLTV snapshots (each with
-   an as-of date and known-at date), then test recent form with shrinkage,
-   roster stability, map/veto matchups, and best-of records one at a time.
-3. **Tournament simulation:** add explicit Swiss/bracket formats once match
-   probabilities are evaluated.
-4. **Fantasy and pick'ems:** collect player stats only for relevant pools;
-   include the provider, rating formula version, and known-at date. Then add
-   dated prices, crowd pick rates, projection value, and lineup decisions.
-5. **Intangibles:** record sourced hypotheses with as-of and known-at dates
-   and a note; test them against out-of-time residuals and retain only small
-   effects validated across events.
-6. **Machine learning:** defer training until multiple events/seasons of
-   consistent, time-stamped data and evaluation results exist.
-
-Add data according to the current model's needs. Match outcomes and roster
-stints are the starting facts; enter player stats only when tied to an active
-fantasy pool, and add qualitative tags as specific hypotheses arise.
+Next, add a small, well-sourced match history and evaluate Elo chronologically.
+Add model inputs and features when they can be tested against relevant data;
+defer tournament, fantasy, and machine-learning work until then.
