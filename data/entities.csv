@@ -1,1 +1,17 @@
 entity_type,entity_id,canonical_name,alias,source_url
+team,team:3dmax,3DMAX,3DMAX,https://www.hltv.org/team/4914/3dmax
+team,team:astralis,Astralis,Astralis,https://www.hltv.org/team/6665/astralis
+team,team:faze,FaZe,FaZe,https://www.hltv.org/team/6667/faze
+team,team:furia,FURIA,FURIA,https://www.hltv.org/team/8297/furia
+team,team:g2,G2,G2,https://www.hltv.org/team/5995/g2
+team,team:heroic,HEROIC,HEROIC,https://www.hltv.org/team/7175/heroic
+team,team:lynn-vision,Lynn Vision,Lynn Vision,https://www.hltv.org/team/8840/lynn-vision
+team,team:mouz,MOUZ,MOUZ,https://www.hltv.org/team/4494/mouz
+team,team:natus-vincere,Natus Vincere,Natus Vincere,https://www.hltv.org/team/4608/natus-vincere
+team,team:pain,paiN,paiN,https://www.hltv.org/team/4773/pain
+team,team:spirit,Spirit,Spirit,https://www.hltv.org/team/7020/spirit
+team,team:the-mongolz,The MongolZ,The MongolZ,https://www.hltv.org/team/6248/the-mongolz
+team,team:tyloo,TYLOO,TYLOO,https://www.hltv.org/team/4863/tyloo
+team,team:falcons,Falcons,Falcons,https://www.hltv.org/team/11283/falcons
+team,team:virtuspro,Virtus.pro,Virtus.pro,https://www.hltv.org/team/5378/virtuspro
+team,team:vitality,Vitality,Vitality,https://www.hltv.org/team/9565/vitality

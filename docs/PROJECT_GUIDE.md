@@ -5,8 +5,9 @@ See the root `README.md` for the short project overview and quick start.
 The current goal is reliable historical data collection and a point-in-time
 Elo baseline. Event files and the entity registry are the source of truth;
 `data/cs.db` is a generated SQLite database rebuilt from them. No real event
-data has been entered yet, so the current tests check the pipeline, not model
-quality.
+history existed before the initial IEM Chengdu 2025 slice was added. The
+current evaluation is a small pipeline and baseline check, not evidence of
+general predictive quality.
 
 ## Layout
 
@@ -31,6 +32,27 @@ Follow **Plan → Implement → Trim → Review** and the role permissions in
 [AGENTS.md](../AGENTS.md).
 
 ## Source data
+
+### Source selection and collection
+
+Use public sources only when their terms permit the intended use. Prefer
+official event sources for event facts. As of 2026-11-27, Liquipedia API access
+is pending; do not use it until the user confirms approval. Its
+[terms](https://liquipedia.net/api-terms-of-use) require approved LiquipediaDB
+access, do not support MediaWiki API use for bulk data, and prohibit non-API
+HTML automation. If access is granted, follow the
+[current API documentation](https://liquipedia.net/api), including its rate
+limits and attribution requirements (CC BY-SA 3.0).
+
+Do not automate access to HLTV. For missing details, ask the user or a human;
+dictated data is fine. Label it user-provided, record the subject and capture
+date, and include the underlying source when known. Never guess or invent a
+citation. Respect rate limits, caching, and attribution; never bypass access
+limits with proxies, IP changes, stealth tools, or third-party accounts.
+
+Keep team, event, and player-at-event facts distinct. Record source URLs and,
+for time-varying facts, both effective and known dates when they differ.
+Plan a schema change if the current format cannot preserve this information.
 
 ### Entity registry
 
@@ -102,6 +124,32 @@ optional; each recorded pick or ban includes its order, acting team, and map.
 Unknown JSON fields (including future player-stat blocks) generate a warning
 and are skipped by the current loader; source files remain unchanged.
 
+### Initial match history
+
+The initial sourced history is the full IEM Chengdu 2025 event: 16 teams and
+30 series from November 3–9, 2025. Event identity and EPT Masters
+classification are sourced from the
+[official ESL event page](https://pro.eslgaming.com/tour/cs/chengdu/). Dates
+and format are cross-checked against the
+[HLTV event page](https://www.hltv.org/events/8041/iem-chengdu-2025) and
+[BLAST event results](https://blast.tv/cs/tournaments/iem-chengdu-2025/match).
+Team identities and individual match records link to direct HLTV team and
+match pages in the source files. This slice contains series results only; map
+results, rosters, and player statistics are not included. Since it covers one
+event, it is useful for exercising chronological evaluation but remains a
+limited sample.
+
+### Adding more history
+
+Add one event at a time using the existing JSON and entity formats. For each
+event, cross-check its dates and format plus a sample of match results against
+another permitted source. Ask a human to resolve conflicts or missing facts;
+note single-source gaps in that event's guide entry, and never guess.
+
+After each batch, run the README quick-start checks. Record the added coverage
+and updated backtest result here. Keep features deferred until multiple events
+support a held-out evaluation.
+
 ### Roster history
 
 `data/raw/roster_stints.csv` has one row per player/team stint:
@@ -144,12 +192,22 @@ information; do not split the raw store into yearly files.
 
 ## Current model and roadmap
 
-The Elo baseline starts teams at `1500`, applies LAN/online weights and
-rating decay, and predicts all matches on a calendar date before applying any
-results from that date. Its Brier score is useful only after sourced historical
-matches are entered. Evaluate by time or held-out events, never by random
-match splits.
+The baseline starts teams at `1500`, uses LAN/online weights, series margin,
+and 180-day rating decay, and predicts all matches on a date before applying
+that date's results.
 
-Next, add a small, well-sourced match history and evaluate Elo chronologically.
-Add model inputs and features when they can be tested against relevant data;
-defer tournament, fantasy, and machine-learning work until then.
+The IEM Chengdu 2025 slice produced 30 predictions across 16 teams
+(November 3–9, 2025). Its Brier score was `0.25006867`, slightly worse than
+the constant 0.5 baseline (`0.25000000`). This one-event result is
+exploratory, not evidence of predictive quality. Add sourced history across
+events before adding features; evaluate by time or held-out events.
+
+Final ratings describe the latest recorded match, not current form. This
+history ends on 2025-11-09, and Elo does not use roster stints.
+
+### Player-feature research (deferred)
+
+The user reported (2026-11-27) 29 HLTV Brain player-at-event metrics across
+entrying, trading, opening, closing, sniping, and utility. Treat these as a
+research lead, not an approved feature set; verify definitions and role
+filters with a human-provided sample before designing storage or model changes.
