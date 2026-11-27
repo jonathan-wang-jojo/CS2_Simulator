@@ -1,0 +1,107 @@
+{
+  "event": {
+    "event_id": "event:iem-cologne-major-2026-playoffs",
+    "name": "IEM Cologne Major 2026 Playoffs",
+    "tier": "Major",
+    "is_lan": true,
+    "format": "Single elimination BO3; BO5 grand final",
+    "start_date": "2026-06-18",
+    "end_date": "2026-06-21",
+    "is_major": true,
+    "source_url": "https://www.hltv.org/events/8301/iem-cologne-major-2026",
+    "teams": [
+      "9z",
+      "Aurora",
+      "BETBOOM",
+      "Falcons",
+      "FURIA",
+      "G2",
+      "Spirit",
+      "Vitality"
+    ],
+    "expected_match_count": 7,
+    "provenance": {
+      "retrieved_on": "2026-11-27",
+      "verified_by": "Copilot-assisted manual HLTV review"
+    }
+  },
+  "matches": [
+    {
+      "match_id": "match:iem-cologne-major-2026-playoffs-001",
+      "date": "2026-06-18",
+      "round": "Playoff quarter-final",
+      "team_a": "Aurora",
+      "team_b": "BETBOOM",
+      "score_a": 2,
+      "score_b": 0,
+      "best_of": 3,
+      "source_url": "https://www.hltv.org/matches/2394996/aurora-vs-betboom-iem-cologne-major-2026"
+    },
+    {
+      "match_id": "match:iem-cologne-major-2026-playoffs-002",
+      "date": "2026-06-18",
+      "round": "Playoff quarter-final",
+      "team_a": "9z",
+      "team_b": "FURIA",
+      "score_a": 1,
+      "score_b": 2,
+      "best_of": 3,
+      "source_url": "https://www.hltv.org/matches/2394997/9z-vs-furia-iem-cologne-major-2026"
+    },
+    {
+      "match_id": "match:iem-cologne-major-2026-playoffs-003",
+      "date": "2026-06-19",
+      "round": "Playoff quarter-final",
+      "team_a": "G2",
+      "team_b": "Spirit",
+      "score_a": 1,
+      "score_b": 2,
+      "best_of": 3,
+      "source_url": "https://www.hltv.org/matches/2394998/g2-vs-spirit-iem-cologne-major-2026"
+    },
+    {
+      "match_id": "match:iem-cologne-major-2026-playoffs-004",
+      "date": "2026-06-19",
+      "round": "Playoff quarter-final",
+      "team_a": "Falcons",
+      "team_b": "Vitality",
+      "score_a": 2,
+      "score_b": 1,
+      "best_of": 3,
+      "source_url": "https://www.hltv.org/matches/2394999/falcons-vs-vitality-iem-cologne-major-2026"
+    },
+    {
+      "match_id": "match:iem-cologne-major-2026-playoffs-005",
+      "date": "2026-06-20",
+      "round": "Playoff semi-final",
+      "team_a": "Aurora",
+      "team_b": "FURIA",
+      "score_a": 0,
+      "score_b": 2,
+      "best_of": 3,
+      "source_url": "https://www.hltv.org/matches/2395000/aurora-vs-furia-iem-cologne-major-2026"
+    },
+    {
+      "match_id": "match:iem-cologne-major-2026-playoffs-006",
+      "date": "2026-06-20",
+      "round": "Playoff semi-final",
+      "team_a": "Spirit",
+      "team_b": "Falcons",
+      "score_a": 1,
+      "score_b": 2,
+      "best_of": 3,
+      "source_url": "https://www.hltv.org/matches/2395001/spirit-vs-falcons-iem-cologne-major-2026"
+    },
+    {
+      "match_id": "match:iem-cologne-major-2026-playoffs-007",
+      "date": "2026-06-21",
+      "round": "Grand final",
+      "team_a": "FURIA",
+      "team_b": "Falcons",
+      "score_a": 0,
+      "score_b": 3,
+      "best_of": 5,
+      "source_url": "https://www.hltv.org/matches/2395002/furia-vs-falcons-iem-cologne-major-2026"
+    }
+  ]
+}
