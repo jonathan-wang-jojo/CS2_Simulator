@@ -72,6 +72,17 @@ def _source_url(value, location):
     return value
 
 
+def _hltv_source_url(value, location):
+    value = _source_url(value, location)
+    parsed = urlparse(value)
+    host = (parsed.hostname or "").casefold()
+    if parsed.scheme != "https" or not (
+        host == "hltv.org" or host.endswith(".hltv.org")
+    ):
+        _fail(location, "must be an HTTPS HLTV URL")
+    return value
+
+
 def _alias_key(value):
     return " ".join(_text(value, "alias").split()).casefold()
 
@@ -122,7 +133,7 @@ def _load_registry(path):
             row["canonical_name"], f"{location} canonical_name"
         )
         alias = _text(row["alias"], f"{location} alias")
-        source_url = _source_url(row["source_url"], f"{location} source_url")
+        source_url = _hltv_source_url(row["source_url"], f"{location} source_url")
 
         previous_name = entities[kind].get(entity_id)
         if previous_name is not None and previous_name != canonical_name:
@@ -171,13 +182,24 @@ def _source_capture(value, data_dir, event_slug, location):
     if (
         relative.is_absolute()
         or ".." in relative.parts
+        or "\\" in value
         or relative.parts[:2] != ("source", event_slug)
     ):
         _fail(
             location,
             f"must be a relative path under source/{event_slug}/",
         )
-    capture = data_dir.joinpath(*relative.parts)
+    try:
+        data_root = data_dir.resolve()
+        source_root = (data_root / "source" / event_slug).resolve()
+        capture = data_root.joinpath(*relative.parts).resolve()
+        source_root.relative_to(data_root)
+        capture.relative_to(source_root)
+    except (OSError, RuntimeError, ValueError):
+        _fail(
+            location,
+            f"source capture {value!r} must resolve within source/{event_slug}/",
+        )
     if not capture.is_file():
         _fail(location, f"source capture {value!r} is missing")
     return value
@@ -192,9 +214,9 @@ def _load_provenance(raw, data_dir, event_slug, location):
     _warn_unknown(raw, allowed, location)
     retrieved_on = _date(raw.get("retrieved_on"), f"{location} retrieved_on")
     verified_by = _text(raw.get("verified_by"), f"{location} verified_by")
-    capture_files = raw.get("source_capture_files")
-    if not isinstance(capture_files, list) or not capture_files:
-        _fail(f"{location} source_capture_files", "must be a non-empty list")
+    capture_files = raw.get("source_capture_files", [])
+    if not isinstance(capture_files, list):
+        _fail(f"{location} source_capture_files", "must be a list when provided")
     captures = [
         _source_capture(
             value,
@@ -229,8 +251,9 @@ def _load_cross_check(match, aliases, data_dir, event_slug, location, primary_ur
         "source_url",
         "retrieved_on",
         "verified_by",
-        "source_capture_file",
     }
+    if "source_capture_file" in raw:
+        fields.add("source_capture_file")
     _warn_unknown(raw, fields, f"{location} cross_check")
     checked_date = _date(raw.get("date"), f"{location} cross_check date")
     team_a_id = _resolve_name(
@@ -271,17 +294,29 @@ def _load_cross_check(match, aliases, data_dir, event_slug, location, primary_ur
             f"{location} cross_check source_url",
             "must use an independent source host",
         )
+    if checked_host != "liquipedia.net" and not checked_host.endswith(
+        ".liquipedia.net"
+    ):
+        _fail(
+            f"{location} cross_check source_url",
+            "must use a Liquipedia backup URL",
+        )
     retrieved_on = _date(
         raw.get("retrieved_on"), f"{location} cross_check retrieved_on"
     )
     verified_by = _text(
         raw.get("verified_by"), f"{location} cross_check verified_by"
     )
-    capture_file = _source_capture(
-        raw.get("source_capture_file"),
-        data_dir,
-        event_slug,
-        f"{location} cross_check source_capture_file",
+    capture_value = raw.get("source_capture_file")
+    capture_file = (
+        _source_capture(
+            capture_value,
+            data_dir,
+            event_slug,
+            f"{location} cross_check source_capture_file",
+        )
+        if capture_value is not None
+        else None
     )
     cross_check = {
         "date": checked_date,
@@ -442,7 +477,9 @@ def _load_event(path, data_dir, aliases, seen):
         "start_date": start_date,
         "end_date": end_date,
         "is_major": int(event["is_major"]),
-        "source_url": _source_url(event.get("source_url"), f"{path} event source_url"),
+        "source_url": _hltv_source_url(
+            event.get("source_url"), f"{path} event source_url"
+        ),
     }
     expected_teams = None
     if "teams" in event:
@@ -464,6 +501,8 @@ def _load_event(path, data_dir, aliases, seen):
         expected_stem,
         f"{path} event provenance",
     )
+    if provenance is None:
+        _fail(path, "event provenance is required")
 
     raw_resolutions = event.get("discrepancy_resolutions", [])
     if not isinstance(raw_resolutions, list):
@@ -576,7 +615,9 @@ def _load_event(path, data_dir, aliases, seen):
         if duplicate_key in seen["match_keys"]:
             _fail(location, "duplicate event/date/team matchup")
         seen["match_keys"].add(duplicate_key)
-        source_url = _source_url(match.get("source_url"), f"{location} source_url")
+        source_url = _hltv_source_url(
+            match.get("source_url"), f"{location} source_url"
+        )
         if source_url in seen["match_sources"]:
             _fail(location, "duplicate match source_url")
         seen["match_sources"].add(source_url)
@@ -734,11 +775,6 @@ def _load_event(path, data_dir, aliases, seen):
     cross_checked_count = sum(
         match["cross_check"] is not None for match in normalized_matches
     )
-    if cross_checked_count and provenance is None:
-        _fail(path, "event provenance is required when cross-checks are recorded")
-    if provenance is not None and cross_checked_count != len(normalized_matches):
-        _fail(path, "every match needs a cross_check when event provenance is recorded")
-
     return {
         "event": event_row,
         "matches": normalized_matches,
@@ -811,7 +847,7 @@ def _load_roster(path, aliases):
         ).casefold()
         if stand_in_value not in {"true", "false"}:
             _fail(f"{location} is_stand_in", "must be 'true' or 'false'")
-        source_url = _source_url(row["source_url"], f"{location} source_url")
+        source_url = _hltv_source_url(row["source_url"], f"{location} source_url")
         stint_key = (team_id, player_id, start_date)
         if stint_key in seen:
             _fail(location, "duplicate roster stint")

@@ -42,7 +42,7 @@ class DataPipelineTests(unittest.TestCase):
                 ["entity_type", "entity_id", "canonical_name", "alias", "source_url"]
             )
             writer.writerows(
-                (*row, f"https://example.test/{row[1]}") for row in rows
+                (*row, f"https://www.hltv.org/team/{row[1]}") for row in rows
             )
 
     def _write_rosters(self):
@@ -69,7 +69,7 @@ class DataPipelineTests(unittest.TestCase):
                     "",
                     "false",
                     "2025-12-31",
-                    "https://example.test/roster/alpha",
+                    "https://www.hltv.org/team/alpha",
                 ]
             )
 
@@ -84,7 +84,11 @@ class DataPipelineTests(unittest.TestCase):
                 "start_date": "2026-01-01",
                 "end_date": "2026-01-03",
                 "is_major": False,
-                "source_url": "https://example.test/events/test",
+                "source_url": "https://www.hltv.org/events/test",
+                "provenance": {
+                    "retrieved_on": "2026-01-04",
+                    "verified_by": "test reviewer",
+                },
             },
             "matches": [
                 {
@@ -95,7 +99,7 @@ class DataPipelineTests(unittest.TestCase):
                     "score_a": 2,
                     "score_b": 0,
                     "best_of": 3,
-                    "source_url": "https://example.test/matches/001",
+                    "source_url": "https://www.hltv.org/matches/001",
                     "maps": [
                         {"map_name": "Nuke", "score_a": 13, "score_b": 8},
                         {"map_name": "Mirage", "score_a": 13, "score_b": 10},
@@ -121,7 +125,7 @@ class DataPipelineTests(unittest.TestCase):
                     "score_a": 2,
                     "score_b": 0,
                     "best_of": 3,
-                    "source_url": "https://example.test/matches/002",
+                    "source_url": "https://www.hltv.org/matches/002",
                 },
                 {
                     "match_id": "match:test-event-003",
@@ -131,7 +135,7 @@ class DataPipelineTests(unittest.TestCase):
                     "score_a": 2,
                     "score_b": 0,
                     "best_of": 3,
-                    "source_url": "https://example.test/matches/003",
+                    "source_url": "https://www.hltv.org/matches/003",
                 },
             ],
         }
@@ -172,7 +176,7 @@ class DataPipelineTests(unittest.TestCase):
                 "score_b": checked_score_b,
                 "best_of": match["best_of"],
                 "source_url": (
-                    "https://independent.example.test/matches/"
+                    "https://liquipedia.net/counterstrike/matches/"
                     + match["match_id"].rsplit("-", 1)[-1]
                 ),
                 "retrieved_on": "2026-01-04",
@@ -248,7 +252,7 @@ class DataPipelineTests(unittest.TestCase):
                 "team_a": "Team Bravo",
                 "team_b": "Alpha",
                 "round": "A later round",
-                "source_url": "https://example.test/matches/004",
+                "source_url": "https://www.hltv.org/matches/004",
             }
         )
         document["matches"].append(duplicate)
@@ -312,6 +316,52 @@ class DataPipelineTests(unittest.TestCase):
         self.assertEqual(data["coverage"][0]["cross_checked_count"], 3)
         self.assertEqual(data["coverage"][0]["discrepancies_found"], 0)
         self.assertTrue(data["coverage"][0]["provenance_recorded"])
+
+    def test_manual_hltv_provenance_needs_no_capture_or_backup_check(self):
+        self._write_event()
+
+        data = validate_sources(self.data_dir)
+
+        self.assertEqual(data["coverage"][0]["cross_checked_count"], 0)
+        self.assertEqual(data["coverage"][0]["provenance"]["source_capture_files"], [])
+
+    def test_rejects_non_hltv_primary_source(self):
+        document = self._event_document()
+        document["matches"][0]["source_url"] = "https://example.test/match/001"
+        self._write_event(document)
+
+        with self.assertRaisesRegex(ValidationError, "HTTPS HLTV URL"):
+            validate_sources(self.data_dir)
+
+    def test_requires_event_provenance(self):
+        document = self._event_document()
+        del document["event"]["provenance"]
+        self._write_event(document)
+
+        with self.assertRaisesRegex(ValidationError, "event provenance is required"):
+            validate_sources(self.data_dir)
+
+    def test_rejects_non_liquipedia_backup(self):
+        document = self._event_document()
+        self._add_cross_checks(document)
+        document["matches"][0]["cross_check"]["source_url"] = (
+            "https://example.test/matches/001"
+        )
+        self._write_event(document)
+
+        with self.assertRaisesRegex(ValidationError, "Liquipedia backup URL"):
+            validate_sources(self.data_dir)
+
+    def test_rejects_windows_separator_capture_traversal(self):
+        document = self._event_document()
+        self._add_cross_checks(document)
+        document["matches"][0]["cross_check"]["source_capture_file"] = (
+            "source\\test-event\\..\\..\\outside.txt"
+        )
+        self._write_event(document)
+
+        with self.assertRaisesRegex(ValidationError, "relative path under"):
+            validate_sources(self.data_dir)
 
     def test_human_resolution_is_recorded_and_allows_validation(self):
         document = self._event_document()

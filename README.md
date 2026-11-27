@@ -17,7 +17,8 @@ python -m src.backtest
 python -m unittest discover -s tests
 ```
 
-`data/entities.csv` and the files under `data/raw/` are the source of truth.
+`data/entities.csv` and the files under `data/raw/` are the active source of
+truth. `data/pending/` holds records excluded until HLTV review is complete.
 `data/cs.db` is generated and can be rebuilt at any time.
 
 See [the project and data guide](docs/PROJECT_GUIDE.md) for data formats,

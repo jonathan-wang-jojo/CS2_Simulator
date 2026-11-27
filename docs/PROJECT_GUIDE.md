@@ -2,18 +2,16 @@
 
 See the root `README.md` for the short project overview and quick start.
 
-The current goal is reliable historical data collection and a point-in-time
-Elo baseline. Event files and the entity registry are the source of truth;
-`data/cs.db` is a generated SQLite database rebuilt from them. No real event
-history existed before the initial IEM Chengdu 2025 slice was added. The
-current evaluation is a small pipeline and baseline check, not evidence of
-general predictive quality.
+The current goal is reliable historical results and a point-in-time Elo
+baseline. HLTV is the canonical source for active event and match facts.
+`data/cs.db` is generated from validated files; pending events are excluded.
 
 ## Layout
 
 - `data/entities.csv` — stable team/player IDs and sourced name aliases.
 - `data/raw/<event-id>.json` — normalized event records.
-- `data/source/<event-id>/` — unchanged source captures.
+- `data/pending/` — preserved event records awaiting HLTV verification.
+- `data/source/<event-id>/` — optional captures when source terms permit them.
 - `data/reports/` — generated coverage and discrepancy reports.
 - `data/raw/roster_stints.csv` — dated lineup history, entered separately from
   event results.
@@ -37,23 +35,24 @@ Follow **Plan → Implement → Trim → Review** and the role permissions in
 
 ### Source selection and collection
 
-Use public sources only when their terms permit the intended use. Prefer
-official event sources for event facts. As of 2026-11-27, Liquipedia API access
-is pending; do not use it until the user confirms approval. Its
-[terms](https://liquipedia.net/api-terms-of-use) require approved LiquipediaDB
-access, do not support MediaWiki API use for bulk data, and prohibit non-API
-HTML automation. If access is granted, follow the
-[current API documentation](https://liquipedia.net/api), including its rate
-limits and attribution requirements (CC BY-SA 3.0).
+Use HLTV as the sole primary source for active event and match facts. Review
+public HLTV pages manually and enter results with their direct event and match
+URLs. The [HLTV terms](https://www.hltv.org/terms) prohibit data mining and
+web scraping. Do not automate access, bypass site protections, or store copied
+page HTML.
 
-Do not automate access to HLTV. For missing details, ask the user or a human;
-dictated data is fine. Label it user-provided, record the subject and capture
-date, and include the underlying source when known. Never guess or invent a
-citation. Respect rate limits, caching, and attribution; never bypass access
-limits with proxies, IP changes, stealth tools, or third-party accounts.
+Liquipedia may be used only as an optional manual or approved-API cross-check;
+it never replaces HLTV as the primary source. API use requires user-confirmed
+approval and must follow the
+[Liquipedia API terms](https://liquipedia.net/api-terms-of-use) and
+[documentation](https://liquipedia.net/api). If HLTV lacks a required fact or
+sources conflict, leave the event pending and ask a human rather than choosing
+another source automatically.
 
-Keep team, event, and player-at-event facts distinct. Record source URLs and,
-for time-varying facts, both effective and known dates when they differ.
+Record the retrieval date and verifier for each event batch. Keep team,
+event, and player-at-event facts distinct, and record direct source URLs.
+Never guess or invent a citation. For time-varying facts, record effective and
+known dates when they differ.
 Plan a schema change if the current format cannot preserve this information.
 
 ### Entity registry
@@ -90,7 +89,7 @@ Each `data/raw/<event-id>.json` contains the event and its match records.
     "start_date": "2026-01-01",
     "end_date": "2026-01-10",
     "is_major": true,
-    "source_url": "https://example.com/event"
+    "source_url": "https://www.hltv.org/events/1234/sample-major"
   },
   "matches": [
     {
@@ -102,7 +101,7 @@ Each `data/raw/<event-id>.json` contains the event and its match records.
       "score_a": 2,
       "score_b": 1,
       "best_of": 3,
-      "source_url": "https://example.com/match",
+      "source_url": "https://www.hltv.org/matches/1234/team-a-vs-team-b",
       "maps": [
         {"map_name": "Mirage", "score_a": 13, "score_b": 8},
         {"map_name": "Nuke", "score_a": 10, "score_b": 13},
@@ -123,12 +122,13 @@ it retains the published round label. A series between the same teams on the
 same date is rejected even when the round labels differ. Match IDs and match
 source URLs must be unique.
 
-Optional event fields `teams` and `expected_match_count` let validation check
-the expected participant roster and total series count. Each team must appear
-in at least one match. `provenance` records the retrieval date, verifier, and
-relative paths to unchanged captures under `data/source/<event-id>/`.
+`provenance` is required and records the retrieval date and verifier.
+`source_capture_files` is optional and may only be used when retaining a
+capture is permitted. Optional event fields `teams` and
+`expected_match_count` let validation check the expected participant roster
+and total series count. Each team must appear in at least one match.
 
-The optional fields have these shapes:
+The provenance and optional fields have these shapes:
 
 ```json
 {
@@ -137,8 +137,7 @@ The optional fields have these shapes:
     "expected_match_count": 1,
     "provenance": {
       "retrieved_on": "2026-11-27",
-      "verified_by": "researcher",
-      "source_capture_files": ["source/sample-major-2026/results.txt"]
+      "verified_by": "human reviewer"
     }
   },
   "matches": [
@@ -150,33 +149,27 @@ The optional fields have these shapes:
         "score_a": 2,
         "score_b": 1,
         "best_of": 3,
-        "source_url": "https://independent.example/match",
+        "source_url": "https://liquipedia.net/counterstrike/matches/1234",
         "retrieved_on": "2026-11-27",
-        "verified_by": "researcher",
-        "source_capture_file": "source/sample-major-2026/results.txt"
+        "verified_by": "human reviewer"
       }
     }
   ]
 }
 ```
 
-For a complete second-source check, add a `cross_check` object to every match
-and event-level `provenance`. It records the second source's date, teams,
-series score, best-of, URL, retrieval date, verifier, and capture path. The
-second source must have a different host from the match's primary source.
-Disagreements are written to `data/reports/discrepancies.json` and stop
-validation until a human resolves them. Record the match ID, date, verifier,
-and explanation in `event.discrepancy_resolutions`; validation then retains
-the discrepancy and its resolution in the report rather than selecting a
-source automatically.
+Event-level provenance is required. A Liquipedia `cross_check` is optional;
+when present, it records the compared result, URL, retrieval date, and
+verifier. Captures are optional. Disagreements are written to
+`data/reports/discrepancies.json` and stop validation until a human checks
+HLTV and records the resolution in `event.discrepancy_resolutions`.
 
 Tournament structure is not validated. Stage metadata remains in raw event
 files but is not loaded into the database.
 
 The validator writes `data/reports/coverage.json` with event sources, series
-and cross-check counts, discrepancies and resolutions, and provenance.
-Missing cross-checks or provenance remain visible; legacy event files
-continue to load.
+and cross-check counts, discrepancies and resolutions, and provenance. All
+primary event, match, entity, and roster URLs must be HTTPS HLTV URLs.
 
 Map results are optional. If entered, include all maps played and ensure their
 individual winners agree with the series score. `veto_actions` is also
@@ -186,36 +179,20 @@ and are skipped by the current loader; source files remain unchanged.
 
 ### Sourced match history
 
-The first sourced event is the full IEM Chengdu 2025 event: 16 teams and 30
-series from November 3–9, 2025. Event identity and EPT Masters classification
-are sourced from the
-[official ESL event page](https://pro.eslgaming.com/tour/cs/chengdu/). Dates
-and format are cross-checked against the
-[HLTV event page](https://www.hltv.org/events/8041/iem-chengdu-2025) and
-[BLAST event results](https://blast.tv/cs/tournaments/iem-chengdu-2025/match).
-Team identities and individual match records link to direct HLTV team and
-match pages in the source files. This slice contains series results only; map
-results, rosters, and player statistics are not included. Its existing event
-file predates per-series cross-check and retrieval metadata, so coverage
-reports 0 explicitly cross-checked series.
-
-IEM Cologne Major 2026 adds 32 teams and 106 series from June 2–21, 2026.
-The [ESV results page](https://esport.vision/cs2/tournament/10488-iem-cologne-major-2026)
-and [BLAST results page](https://blast.tv/cs/tournaments/iem-cologne-major-2026/match)
-were cross-checked for every series. Four Stage 1 Sharks/Dendele name
-conflicts were resolved using the user's manual HLTV check, recorded in the
-[verification note](../data/source/iem-cologne-major-2026/hltv-stage1-manual-check.txt).
-Dendele remains a source-observed alias, not a Major entrant. The sites use
-different hosts, but their underlying data lineage is unknown; playoff
-best-of values were inferred from series scores. No maps, rosters, or player
-statistics are included.
+No event is currently active. IEM Chengdu 2025 is preserved under
+`data/pending/` until its event metadata is verified against HLTV. The
+Cologne Major 2026 dataset is excluded pending complete HLTV verification. A
+user-provided Stage 1 note remains in `data/pending/`; it only supports the
+listed Stage 1 standings and is not sufficient to restore the event.
 
 ### Adding more history
 
-Add one event at a time. Preserve source captures, cross-check every series
-against an independent permitted source, and ask a human to resolve conflicts
-or missing facts. After each batch, run the README checks and record coverage
-and backtest results.
+Add one event at a time. Manually verify every event fact and series against
+HLTV, record direct URLs plus event retrieval date and verifier, and do not
+copy page HTML. Use Liquipedia only as an optional permitted cross-check.
+Resolve disagreements by checking HLTV; otherwise leave the event pending.
+After each batch, run the README checks and review coverage and backtest
+results.
 
 ### Roster history
 
@@ -265,13 +242,9 @@ The baseline starts teams at `1500`, uses LAN/online weights, series margin,
 and 180-day rating decay, and predicts all matches on a date before applying
 that date's results.
 
-The original IEM Chengdu 2025 slice produced 30 predictions across 16 teams
-(November 3–9, 2025), with a Brier score of `0.25006867`. The current
-two-event backtest contains 136 predictions across 35 rated teams from
-November 3, 2025 through June 21, 2026. Its Brier score is `0.25052297`,
-slightly worse than the constant 0.5 baseline (`0.25000000`). This remains a
-small exploratory sample, not evidence of predictive quality. Add more
-sourced events before adding features; evaluate by time or held-out events.
+There are no active historical matches while the current event records await
+HLTV verification. The backtest produces no predictions until an event is
+approved and loaded.
 
 Final ratings describe the latest recorded match, not current form, and Elo
 does not use roster stints.

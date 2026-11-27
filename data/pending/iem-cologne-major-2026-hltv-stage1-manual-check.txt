@@ -1,7 +1,12 @@
 User-provided manual verification note; this is not a copied HLTV webpage.
 Recorded on: 2026-11-27
 Verified by: user, by manually checking HLTV's public event information
-HLTV page URL: not included in the verification message
+HLTV page URL supplied later by the user:
+https://www.hltv.org/events/9028/iem-cologne-major-2026-stage-1
+
+This note supports the listed Stage 1 standings and four opponent-identity
+resolutions only. It does not verify the full event record or all match
+outcomes.
 
 IEM Cologne Major 2026, Stage 1 standings:
 
