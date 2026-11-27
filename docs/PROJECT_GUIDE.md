@@ -192,9 +192,9 @@ a warning and are skipped by the current loader; source files remain unchanged.
 
 ### Sourced match history
 
-IEM Cologne Major 2026 Stage 1 is active in `data/raw/` with 33 HLTV-linked
-series. IEM Chengdu 2025 remains in `data/pending/` until its event metadata
-is verified against HLTV.
+IEM Cologne Major 2026 Stages 1 and 2 are active in `data/raw/` with 33
+HLTV-linked series each. IEM Chengdu 2025 remains in `data/pending/` until its
+event metadata is verified against HLTV.
 
 ### Adding more history
 
@@ -263,9 +263,9 @@ The baseline starts teams at `1500`, uses LAN/online weights, series margin,
 and 180-day rating decay, and predicts all matches on a date before applying
 that date's results.
 
-IEM Cologne Major 2026 Stage 1 is active historical data. Player ratings are
-supported but have not yet been populated. The backtest currently uses series
-results only; it does not use map or player ratings.
+IEM Cologne Major 2026 Stages 1 and 2 are active historical data. Player
+ratings are supported but have not yet been populated. The backtest currently
+uses series results only; it does not use map or player ratings.
 
 Final ratings describe the latest recorded match, not current form, and Elo
 does not use roster stints.
