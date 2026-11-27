@@ -1,0 +1,368 @@
+{
+  "event": {
+    "event_id": "event:iem-cologne-major-2026-stage-1",
+    "name": "IEM Cologne Major 2026 Stage 1",
+    "tier": "Major",
+    "is_lan": true,
+    "format": "16-team Swiss; BO1 matches with BO3 progression and elimination matches",
+    "start_date": "2026-06-02",
+    "end_date": "2026-06-05",
+    "is_major": true,
+    "source_url": "https://www.hltv.org/events/9028/iem-cologne-major-2026-stage-1",
+    "teams": [
+      "B8",
+      "BETBOOM",
+      "BIG",
+      "FlyQuest",
+      "GamerLegion",
+      "Gaimin Gladiators",
+      "HEROIC",
+      "Liquid",
+      "Lynn Vision",
+      "M80",
+      "MIBR",
+      "NRG",
+      "Sharks",
+      "SINNERS",
+      "THUNDER dOWNUNDER",
+      "TYLOO"
+    ],
+    "expected_match_count": 33,
+    "provenance": {
+      "retrieved_on": "2026-11-27",
+      "verified_by": "Copilot-assisted manual HLTV review"
+    }
+  },
+  "matches": [
+    {
+      "match_id": "match:iem-cologne-major-2026-stage-1-001",
+      "date": "2026-06-02",
+      "team_a": "BIG",
+      "team_b": "Liquid",
+      "score_a": 0,
+      "score_b": 1,
+      "best_of": 1,
+      "source_url": "https://www.hltv.org/matches/2394776/big-vs-liquid-iem-cologne-major-2026-stage-1"
+    },
+    {
+      "match_id": "match:iem-cologne-major-2026-stage-1-002",
+      "date": "2026-06-02",
+      "team_a": "BETBOOM",
+      "team_b": "Gaimin Gladiators",
+      "score_a": 1,
+      "score_b": 0,
+      "best_of": 1,
+      "source_url": "https://www.hltv.org/matches/2394775/betboom-vs-gaimin-gladiators-iem-cologne-major-2026-stage-1"
+    },
+    {
+      "match_id": "match:iem-cologne-major-2026-stage-1-003",
+      "date": "2026-06-02",
+      "team_a": "GamerLegion",
+      "team_b": "NRG",
+      "score_a": 1,
+      "score_b": 0,
+      "best_of": 1,
+      "source_url": "https://www.hltv.org/matches/2394772/gamerlegion-vs-nrg-iem-cologne-major-2026-stage-1"
+    },
+    {
+      "match_id": "match:iem-cologne-major-2026-stage-1-004",
+      "date": "2026-06-02",
+      "team_a": "HEROIC",
+      "team_b": "Sharks",
+      "score_a": 0,
+      "score_b": 1,
+      "best_of": 1,
+      "source_url": "https://www.hltv.org/matches/2394774/heroic-vs-sharks-iem-cologne-major-2026-stage-1"
+    },
+    {
+      "match_id": "match:iem-cologne-major-2026-stage-1-005",
+      "date": "2026-06-02",
+      "team_a": "B8",
+      "team_b": "TYLOO",
+      "score_a": 1,
+      "score_b": 0,
+      "best_of": 1,
+      "source_url": "https://www.hltv.org/matches/2394773/b8-vs-tyloo-iem-cologne-major-2026-stage-1"
+    },
+    {
+      "match_id": "match:iem-cologne-major-2026-stage-1-006",
+      "date": "2026-06-02",
+      "team_a": "MIBR",
+      "team_b": "THUNDER dOWNUNDER",
+      "score_a": 0,
+      "score_b": 1,
+      "best_of": 1,
+      "source_url": "https://www.hltv.org/matches/2394778/mibr-vs-thunder-downunder-iem-cologne-major-2026-stage-1"
+    },
+    {
+      "match_id": "match:iem-cologne-major-2026-stage-1-007",
+      "date": "2026-06-02",
+      "team_a": "SINNERS",
+      "team_b": "FlyQuest",
+      "score_a": 0,
+      "score_b": 1,
+      "best_of": 1,
+      "source_url": "https://www.hltv.org/matches/2394779/sinners-vs-flyquest-iem-cologne-major-2026-stage-1"
+    },
+    {
+      "match_id": "match:iem-cologne-major-2026-stage-1-008",
+      "date": "2026-06-02",
+      "team_a": "M80",
+      "team_b": "Lynn Vision",
+      "score_a": 1,
+      "score_b": 0,
+      "best_of": 1,
+      "source_url": "https://www.hltv.org/matches/2394777/m80-vs-lynn-vision-iem-cologne-major-2026-stage-1"
+    },
+    {
+      "match_id": "match:iem-cologne-major-2026-stage-1-009",
+      "date": "2026-06-02",
+      "team_a": "BETBOOM",
+      "team_b": "Liquid",
+      "score_a": 1,
+      "score_b": 0,
+      "best_of": 1,
+      "source_url": "https://www.hltv.org/matches/2394846/betboom-vs-liquid-iem-cologne-major-2026-stage-1"
+    },
+    {
+      "match_id": "match:iem-cologne-major-2026-stage-1-010",
+      "date": "2026-06-02",
+      "team_a": "BIG",
+      "team_b": "Gaimin Gladiators",
+      "score_a": 1,
+      "score_b": 0,
+      "best_of": 1,
+      "source_url": "https://www.hltv.org/matches/2394847/big-vs-gaimin-gladiators-iem-cologne-major-2026-stage-1"
+    },
+    {
+      "match_id": "match:iem-cologne-major-2026-stage-1-011",
+      "date": "2026-06-02",
+      "team_a": "GamerLegion",
+      "team_b": "FlyQuest",
+      "score_a": 1,
+      "score_b": 0,
+      "best_of": 1,
+      "source_url": "https://www.hltv.org/matches/2394844/gamerlegion-vs-flyquest-iem-cologne-major-2026-stage-1"
+    },
+    {
+      "match_id": "match:iem-cologne-major-2026-stage-1-012",
+      "date": "2026-06-02",
+      "team_a": "M80",
+      "team_b": "Sharks",
+      "score_a": 1,
+      "score_b": 0,
+      "best_of": 1,
+      "source_url": "https://www.hltv.org/matches/2394845/m80-vs-sharks-iem-cologne-major-2026-stage-1"
+    },
+    {
+      "match_id": "match:iem-cologne-major-2026-stage-1-013",
+      "date": "2026-06-02",
+      "team_a": "MIBR",
+      "team_b": "TYLOO",
+      "score_a": 1,
+      "score_b": 0,
+      "best_of": 1,
+      "source_url": "https://www.hltv.org/matches/2394842/mibr-vs-tyloo-iem-cologne-major-2026-stage-1"
+    },
+    {
+      "match_id": "match:iem-cologne-major-2026-stage-1-014",
+      "date": "2026-06-02",
+      "team_a": "SINNERS",
+      "team_b": "NRG",
+      "score_a": 0,
+      "score_b": 1,
+      "best_of": 1,
+      "source_url": "https://www.hltv.org/matches/2394843/sinners-vs-nrg-iem-cologne-major-2026-stage-1"
+    },
+    {
+      "match_id": "match:iem-cologne-major-2026-stage-1-015",
+      "date": "2026-06-02",
+      "team_a": "B8",
+      "team_b": "THUNDER dOWNUNDER",
+      "score_a": 1,
+      "score_b": 0,
+      "best_of": 1,
+      "source_url": "https://www.hltv.org/matches/2394840/b8-vs-thunder-downunder-iem-cologne-major-2026-stage-1"
+    },
+    {
+      "match_id": "match:iem-cologne-major-2026-stage-1-016",
+      "date": "2026-06-02",
+      "team_a": "HEROIC",
+      "team_b": "Lynn Vision",
+      "score_a": 0,
+      "score_b": 1,
+      "best_of": 1,
+      "source_url": "https://www.hltv.org/matches/2394841/heroic-vs-lynn-vision-iem-cologne-major-2026-stage-1"
+    },
+    {
+      "match_id": "match:iem-cologne-major-2026-stage-1-017",
+      "date": "2026-06-03",
+      "team_a": "Liquid",
+      "team_b": "MIBR",
+      "score_a": 0,
+      "score_b": 1,
+      "best_of": 1,
+      "source_url": "https://www.hltv.org/matches/2394850/liquid-vs-mibr-iem-cologne-major-2026-stage-1"
+    },
+    {
+      "match_id": "match:iem-cologne-major-2026-stage-1-018",
+      "date": "2026-06-03",
+      "team_a": "THUNDER dOWNUNDER",
+      "team_b": "BIG",
+      "score_a": 0,
+      "score_b": 1,
+      "best_of": 1,
+      "source_url": "https://www.hltv.org/matches/2394851/thunder-downunder-vs-big-iem-cologne-major-2026-stage-1"
+    },
+    {
+      "match_id": "match:iem-cologne-major-2026-stage-1-019",
+      "date": "2026-06-03",
+      "team_a": "NRG",
+      "team_b": "FlyQuest",
+      "score_a": 1,
+      "score_b": 0,
+      "best_of": 1,
+      "source_url": "https://www.hltv.org/matches/2394848/nrg-vs-flyquest-iem-cologne-major-2026-stage-1"
+    },
+    {
+      "match_id": "match:iem-cologne-major-2026-stage-1-020",
+      "date": "2026-06-03",
+      "team_a": "Sharks",
+      "team_b": "Lynn Vision",
+      "score_a": 0,
+      "score_b": 1,
+      "best_of": 1,
+      "source_url": "https://www.hltv.org/matches/2394849/sharks-vs-lynn-vision-iem-cologne-major-2026-stage-1"
+    },
+    {
+      "match_id": "match:iem-cologne-major-2026-stage-1-021",
+      "date": "2026-06-03",
+      "team_a": "M80",
+      "team_b": "B8",
+      "score_a": 0,
+      "score_b": 2,
+      "best_of": 3,
+      "source_url": "https://www.hltv.org/matches/2394854/m80-vs-b8-iem-cologne-major-2026-stage-1"
+    },
+    {
+      "match_id": "match:iem-cologne-major-2026-stage-1-022",
+      "date": "2026-06-03",
+      "team_a": "Gaimin Gladiators",
+      "team_b": "HEROIC",
+      "score_a": 0,
+      "score_b": 2,
+      "best_of": 3,
+      "source_url": "https://www.hltv.org/matches/2394855/gaimin-gladiators-vs-heroic-iem-cologne-major-2026-stage-1"
+    },
+    {
+      "match_id": "match:iem-cologne-major-2026-stage-1-023",
+      "date": "2026-06-03",
+      "team_a": "TYLOO",
+      "team_b": "SINNERS",
+      "score_a": 2,
+      "score_b": 0,
+      "best_of": 3,
+      "source_url": "https://www.hltv.org/matches/2394853/tyloo-vs-sinners-iem-cologne-major-2026-stage-1"
+    },
+    {
+      "match_id": "match:iem-cologne-major-2026-stage-1-024",
+      "date": "2026-06-03",
+      "team_a": "GamerLegion",
+      "team_b": "BETBOOM",
+      "score_a": 0,
+      "score_b": 2,
+      "best_of": 3,
+      "source_url": "https://www.hltv.org/matches/2394852/gamerlegion-vs-betboom-iem-cologne-major-2026-stage-1"
+    },
+    {
+      "match_id": "match:iem-cologne-major-2026-stage-1-025",
+      "date": "2026-06-04",
+      "team_a": "Liquid",
+      "team_b": "HEROIC",
+      "score_a": 2,
+      "score_b": 0,
+      "best_of": 3,
+      "source_url": "https://www.hltv.org/matches/2394860/liquid-vs-heroic-iem-cologne-major-2026-stage-1"
+    },
+    {
+      "match_id": "match:iem-cologne-major-2026-stage-1-026",
+      "date": "2026-06-04",
+      "team_a": "M80",
+      "team_b": "NRG",
+      "score_a": 2,
+      "score_b": 0,
+      "best_of": 3,
+      "source_url": "https://www.hltv.org/matches/2394861/m80-vs-nrg-iem-cologne-major-2026-stage-1"
+    },
+    {
+      "match_id": "match:iem-cologne-major-2026-stage-1-027",
+      "date": "2026-06-04",
+      "team_a": "MIBR",
+      "team_b": "Lynn Vision",
+      "score_a": 2,
+      "score_b": 0,
+      "best_of": 3,
+      "source_url": "https://www.hltv.org/matches/2394859/mibr-vs-lynn-vision-iem-cologne-major-2026-stage-1"
+    },
+    {
+      "match_id": "match:iem-cologne-major-2026-stage-1-028",
+      "date": "2026-06-04",
+      "team_a": "GamerLegion",
+      "team_b": "BIG",
+      "score_a": 2,
+      "score_b": 0,
+      "best_of": 3,
+      "source_url": "https://www.hltv.org/matches/2394858/gamerlegion-vs-big-iem-cologne-major-2026-stage-1"
+    },
+    {
+      "match_id": "match:iem-cologne-major-2026-stage-1-029",
+      "date": "2026-06-04",
+      "team_a": "TYLOO",
+      "team_b": "Sharks",
+      "score_a": 2,
+      "score_b": 1,
+      "best_of": 3,
+      "source_url": "https://www.hltv.org/matches/2394857/tyloo-vs-sharks-iem-cologne-major-2026-stage-1"
+    },
+    {
+      "match_id": "match:iem-cologne-major-2026-stage-1-030",
+      "date": "2026-06-04",
+      "team_a": "THUNDER dOWNUNDER",
+      "team_b": "FlyQuest",
+      "score_a": 0,
+      "score_b": 2,
+      "best_of": 3,
+      "source_url": "https://www.hltv.org/matches/2394856/thunder-downunder-vs-flyquest-iem-cologne-major-2026-stage-1"
+    },
+    {
+      "match_id": "match:iem-cologne-major-2026-stage-1-031",
+      "date": "2026-06-05",
+      "team_a": "NRG",
+      "team_b": "BIG",
+      "score_a": 1,
+      "score_b": 2,
+      "best_of": 3,
+      "source_url": "https://www.hltv.org/matches/2394864/nrg-vs-big-iem-cologne-major-2026-stage-1"
+    },
+    {
+      "match_id": "match:iem-cologne-major-2026-stage-1-032",
+      "date": "2026-06-05",
+      "team_a": "Liquid",
+      "team_b": "FlyQuest",
+      "score_a": 0,
+      "score_b": 2,
+      "best_of": 3,
+      "source_url": "https://www.hltv.org/matches/2394863/liquid-vs-flyquest-iem-cologne-major-2026-stage-1"
+    },
+    {
+      "match_id": "match:iem-cologne-major-2026-stage-1-033",
+      "date": "2026-06-05",
+      "team_a": "TYLOO",
+      "team_b": "Lynn Vision",
+      "score_a": 2,
+      "score_b": 0,
+      "best_of": 3,
+      "source_url": "https://www.hltv.org/matches/2394862/tyloo-vs-lynn-vision-iem-cologne-major-2026-stage-1"
+    }
+  ]
+}

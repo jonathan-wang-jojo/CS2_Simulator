@@ -7,6 +7,7 @@ import warnings
 from contextlib import closing
 from pathlib import Path
 
+from src.import_event import import_event
 from src.load import rebuild_database
 from src.validate import ValidationError, validate_sources
 
@@ -218,6 +219,84 @@ class DataPipelineTests(unittest.TestCase):
                 "2025-12-31",
             )
 
+    def test_player_ratings_load_at_series_and_map_scope(self):
+        document = self._event_document()
+        document["matches"][0]["player_ratings"] = [
+            {"player": "Player One", "rating": 1.25}
+        ]
+        document["matches"][0]["maps"][0]["player_ratings"] = [
+            {"player": "Player One", "rating": 1.31}
+        ]
+        self._write_event(document)
+
+        data = rebuild_database(self.data_dir, self.database)
+
+        self.assertEqual(
+            data["player_series_ratings"],
+            [
+                {
+                    "match_id": "match:test-event-001",
+                    "player_id": "player:one",
+                    "rating": 1.25,
+                }
+            ],
+        )
+        self.assertEqual(
+            data["player_map_ratings"],
+            [
+                {
+                    "match_id": "match:test-event-001",
+                    "map_number": 1,
+                    "player_id": "player:one",
+                    "rating": 1.31,
+                }
+            ],
+        )
+        with closing(sqlite3.connect(self.database)) as connection:
+            self.assertEqual(
+                connection.execute(
+                    "SELECT rating FROM player_series_ratings"
+                ).fetchone()[0],
+                1.25,
+            )
+            self.assertEqual(
+                connection.execute(
+                    "SELECT rating FROM player_map_ratings"
+                ).fetchone()[0],
+                1.31,
+            )
+
+    def test_player_ratings_require_registered_names(self):
+        document = self._event_document()
+        document["matches"][0]["player_ratings"] = [
+            {"player": "Unknown Player", "rating": 1.25}
+        ]
+        self._write_event(document)
+
+        with self.assertRaisesRegex(ValidationError, "unknown player name"):
+            validate_sources(self.data_dir)
+
+    def test_player_ratings_reject_duplicate_players_at_same_scope(self):
+        document = self._event_document()
+        document["matches"][0]["player_ratings"] = [
+            {"player": "Player One", "rating": 1.25},
+            {"player": "Player One", "rating": 1.18},
+        ]
+        self._write_event(document)
+
+        with self.assertRaisesRegex(ValidationError, "duplicate player"):
+            validate_sources(self.data_dir)
+
+    def test_player_ratings_reject_non_finite_values(self):
+        document = self._event_document()
+        document["matches"][0]["player_ratings"] = [
+            {"player": "Player One", "rating": float("nan")}
+        ]
+        self._write_event(document)
+
+        with self.assertRaisesRegex(ValidationError, "finite number"):
+            validate_sources(self.data_dir)
+
     def test_unknown_alias_fails_and_preserves_existing_database(self):
         rebuild_database(self.data_dir, self.database)
         original_database = self.database.read_bytes()
@@ -325,12 +404,71 @@ class DataPipelineTests(unittest.TestCase):
         self.assertEqual(data["coverage"][0]["cross_checked_count"], 0)
         self.assertEqual(data["coverage"][0]["provenance"]["source_capture_files"], [])
 
-    def test_rejects_non_hltv_primary_source(self):
+    def test_accepts_non_hltv_https_primary_source(self):
         document = self._event_document()
         document["matches"][0]["source_url"] = "https://example.test/match/001"
         self._write_event(document)
 
-        with self.assertRaisesRegex(ValidationError, "HTTPS HLTV URL"):
+        data = validate_sources(self.data_dir)
+        self.assertEqual(
+            data["matches"][0]["source_url"],
+            "https://example.test/match/001",
+        )
+
+    def test_import_event_validates_and_copies_local_json(self):
+        document = self._event_document()
+        document["event"]["event_id"] = "event:second-event"
+        document["event"]["source_url"] = "https://www.hltv.org/events/second"
+        for index, match in enumerate(document["matches"], start=1):
+            match["match_id"] = f"match:second-event-{index:03d}"
+            match["source_url"] = (
+                f"https://www.hltv.org/matches/second-{index:03d}"
+            )
+        export_path = self.data_dir.parent / "second-event-export.json"
+        export_path.write_text(json.dumps(document), encoding="utf-8")
+        original_export = export_path.read_bytes()
+
+        destination = import_event(export_path, self.data_dir)
+
+        self.assertEqual(destination, self.raw_dir / "second-event.json")
+        self.assertEqual(json.loads(destination.read_text(encoding="utf-8")), document)
+        self.assertEqual(export_path.read_bytes(), original_export)
+        self.assertEqual(len(validate_sources(self.data_dir)["events"]), 2)
+        coverage = json.loads(
+            (self.data_dir / "reports" / "coverage.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        self.assertEqual(len(coverage), 2)
+
+    def test_import_event_rejects_invalid_export_without_copying(self):
+        document = self._event_document()
+        document["event"]["event_id"] = "event:second-event"
+        document["matches"][0]["score_a"] = 0
+        export_path = self.data_dir.parent / "invalid-event-export.json"
+        export_path.write_text(json.dumps(document), encoding="utf-8")
+
+        with self.assertRaisesRegex(ValidationError, "plausible result"):
+            import_event(export_path, self.data_dir)
+
+        self.assertFalse((self.raw_dir / "second-event.json").exists())
+        self.assertEqual(len(validate_sources(self.data_dir)["events"]), 1)
+
+    def test_import_event_refuses_to_overwrite(self):
+        source_path = self._write_event()
+        original = source_path.read_bytes()
+
+        with self.assertRaisesRegex(FileExistsError, "destination already exists"):
+            import_event(source_path, self.data_dir)
+
+        self.assertEqual(source_path.read_bytes(), original)
+
+    def test_rejects_non_https_primary_source(self):
+        document = self._event_document()
+        document["matches"][0]["source_url"] = "http://example.test/match/001"
+        self._write_event(document)
+
+        with self.assertRaisesRegex(ValidationError, "HTTPS source URL"):
             validate_sources(self.data_dir)
 
     def test_requires_event_provenance(self):

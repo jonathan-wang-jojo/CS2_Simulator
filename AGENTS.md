@@ -26,9 +26,11 @@
 ## Project rules
 
 - Use plain language. Keep additions short and avoid repeating other docs.
-- Follow `docs/PROJECT_GUIDE.md` for sources and data contracts. Use permitted
-  sources, keep provenance, and ask a human rather than guessing or bypassing
-  access limits.
+- Follow `docs/PROJECT_GUIDE.md` for source policy and data contracts. Public
+  visibility alone does not permit scraping: automate collection only when the
+  source's terms or API explicitly allow it. Never scrape HLTV or bypass access
+  controls; player-specific stats remain out of scope for now. Keep provenance
+  and ask a human when access terms or conflicting facts are unclear.
 - Keep `data/entities.csv` and `data/raw/` as source files. Never edit
   generated `data/cs.db` directly. Change `src/schema.sql` and document schema
   changes in the guide.

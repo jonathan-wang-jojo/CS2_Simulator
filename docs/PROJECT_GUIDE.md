@@ -35,24 +35,25 @@ Follow **Plan → Implement → Trim → Review** and the role permissions in
 
 ### Source selection and collection
 
-Use HLTV as the sole primary source for active event and match facts. Review
-public HLTV pages manually and enter results with their direct event and match
-URLs. The [HLTV terms](https://www.hltv.org/terms) prohibit data mining and
-web scraping. Do not automate access, bypass site protections, or store copied
-page HTML.
+For event and match results, roster moves, and other currently modeled facts,
+prefer direct official sources such as event organizers and team announcements.
+Reputable structured sources may also be used when they publish the relevant
+fact and allow the intended collection method. A page being public does not by
+itself permit scraping. Check the source's current terms and API documentation
+before automating collection; follow stated limits and do not bypass access
+controls. If permission is unclear, use a permitted manual method or ask a
+human.
 
-Liquipedia may be used only as an optional manual or approved-API cross-check;
-it never replaces HLTV as the primary source. API use requires user-confirmed
-approval and must follow the
-[Liquipedia API terms](https://liquipedia.net/api-terms-of-use) and
-[documentation](https://liquipedia.net/api). If HLTV lacks a required fact or
-sources conflict, leave the event pending and ask a human rather than choosing
-another source automatically.
+HLTV is a primary source. Liquipedia may be used as an optional manual or
+approved-API cross-check; API use requires user-confirmed approval and must
+follow the [Liquipedia API terms](https://liquipedia.net/api-terms-of-use) and
+[documentation](https://liquipedia.net/api).
 
-Record the retrieval date and verifier for each event batch. Keep team,
-event, and player-at-event facts distinct, and record direct source URLs.
-Never guess or invent a citation. For time-varying facts, record effective and
-known dates when they differ.
+Record direct source URLs, retrieval date, and verifier for each event batch.
+Keep team, event, and player-at-event facts distinct. Never guess or invent a
+citation. If sources conflict or a required fact cannot be supported, leave
+the event pending and ask a human rather than choosing a source automatically.
+For time-varying facts, record effective and known dates when they differ.
 Plan a schema change if the current format cannot preserve this information.
 
 ### Entity registry
@@ -103,10 +104,16 @@ Each `data/raw/<event-id>.json` contains the event and its match records.
       "best_of": 3,
       "source_url": "https://www.hltv.org/matches/1234/team-a-vs-team-b",
       "maps": [
-        {"map_name": "Mirage", "score_a": 13, "score_b": 8},
+        {
+          "map_name": "Mirage",
+          "score_a": 13,
+          "score_b": 8,
+          "player_ratings": [{"player": "ZywOo", "rating": 1.31}]
+        },
         {"map_name": "Nuke", "score_a": 10, "score_b": 13},
         {"map_name": "Inferno", "score_a": 13, "score_b": 9}
       ],
+      "player_ratings": [{"player": "ZywOo", "rating": 1.27}],
       "veto_actions": [
         {"action": "pick", "team": "Vitality", "map_name": "Mirage"},
         {"action": "ban", "team": "NAVI", "map_name": "Ancient"}
@@ -169,30 +176,43 @@ files but is not loaded into the database.
 
 The validator writes `data/reports/coverage.json` with event sources, series
 and cross-check counts, discrepancies and resolutions, and provenance. All
-primary event, match, entity, and roster URLs must be HTTPS HLTV URLs.
+primary event, match, entity, and roster source URLs must use HTTPS.
 
 Map results are optional. If entered, include all maps played and ensure their
 individual winners agree with the series score. `veto_actions` is also
 optional; each recorded pick or ban includes its order, acting team, and map.
-Unknown JSON fields (including future player-stat blocks) generate a warning
-and are skipped by the current loader; source files remain unchanged.
+Player ratings are optional at both series and map level. Each rating entry
+contains a registered player name and the HLTV rating shown for that scope.
+The loader stores these separately in `player_series_ratings` and
+`player_map_ratings`; map ratings require the corresponding map result. Record
+ratings by manually reviewing the direct HLTV match page; the pipeline never
+fetches or parses HLTV pages. These values are not currently used by Elo.
+Unknown JSON fields other than the supported `player_ratings` fields generate
+a warning and are skipped by the current loader; source files remain unchanged.
 
 ### Sourced match history
 
-No event is currently active. IEM Chengdu 2025 is preserved under
-`data/pending/` until its event metadata is verified against HLTV. The
-Cologne Major 2026 dataset is excluded pending complete HLTV verification. A
-user-provided Stage 1 note remains in `data/pending/`; it only supports the
-listed Stage 1 standings and is not sufficient to restore the event.
+IEM Cologne Major 2026 Stage 1 is active in `data/raw/` with 33 HLTV-linked
+series. IEM Chengdu 2025 remains in `data/pending/` until its event metadata
+is verified against HLTV.
 
 ### Adding more history
 
-Add one event at a time. Manually verify every event fact and series against
-HLTV, record direct URLs plus event retrieval date and verifier, and do not
-copy page HTML. Use Liquipedia only as an optional permitted cross-check.
-Resolve disagreements by checking HLTV; otherwise leave the event pending.
-After each batch, run the README checks and review coverage and backtest
-results.
+Add one event at a time. Verify each fact against a source that supports it and
+permits the collection method, record direct URLs plus event retrieval date
+and verifier, and retain only source captures that are permitted. Use
+structured feeds or APIs to streamline collection only when their terms allow
+it. HLTV is the main source of truth. Use Liquipedia as an
+optional permitted cross-check. Resolve disagreements through human review;
+otherwise leave the event pending. After each batch, run the README checks and
+review coverage and backtest results.
+
+For an existing normalized JSON export, run
+`python -m src.import_event event.json`, replacing `event.json` with the file's
+path. The importer reads a local file only, validates it against the current
+entity registry and event data, refuses to overwrite an existing event, and
+adds it to `data/raw/`. Register unknown team or player aliases in
+`data/entities.csv` first.
 
 ### Roster history
 
@@ -216,9 +236,10 @@ date, not merely by the roster's effective dates.
 
 The rebuild creates only tables needed for current match and roster work:
 `teams`, `team_aliases`, `players`, `player_aliases`, `events`, `matches`,
-`maps`, `map_results`, `veto_actions`, and `roster_stints`. Later domains
-(player statistics, rankings, fantasy, crowd picks, intangibles, roles, and
-prediction logs) are intentionally absent until there is a concrete use.
+`maps`, `map_results`, `player_series_ratings`, `player_map_ratings`,
+`veto_actions`, and `roster_stints`. Other domains (rankings, fantasy, crowd
+picks, intangibles, roles, and prediction logs) remain deferred until there is
+a concrete use.
 
 The rebuild validates every source before writing a temporary database, checks
 SQLite integrity, then atomically replaces `data/cs.db`. A failed validation
@@ -242,9 +263,9 @@ The baseline starts teams at `1500`, uses LAN/online weights, series margin,
 and 180-day rating decay, and predicts all matches on a date before applying
 that date's results.
 
-There are no active historical matches while the current event records await
-HLTV verification. The backtest produces no predictions until an event is
-approved and loaded.
+IEM Cologne Major 2026 Stage 1 is active historical data. Player ratings are
+supported but have not yet been populated. The backtest currently uses series
+results only; it does not use map or player ratings.
 
 Final ratings describe the latest recorded match, not current form, and Elo
 does not use roster stints.

@@ -63,6 +63,17 @@ def _insert_data(connection, data):
         data["map_results"],
     )
     connection.executemany(
+        "INSERT INTO player_series_ratings (match_id, player_id, rating) "
+        "VALUES (:match_id, :player_id, :rating)",
+        data["player_series_ratings"],
+    )
+    connection.executemany(
+        "INSERT INTO player_map_ratings "
+        "(match_id, map_number, player_id, rating) "
+        "VALUES (:match_id, :map_number, :player_id, :rating)",
+        data["player_map_ratings"],
+    )
+    connection.executemany(
         "INSERT INTO veto_actions "
         "(match_id, action_number, action, map_id, team_id) "
         "VALUES (:match_id, :action_number, :action, :map_id, :team_id)",
@@ -124,6 +135,8 @@ def main():
         f"{len(data['entities']['player'])} players, "
         f"{len(data['events'])} events, {len(data['matches'])} matches, "
         f"{len(data['map_results'])} map results, "
+        f"{len(data['player_series_ratings'])} series ratings, "
+        f"{len(data['player_map_ratings'])} map ratings, "
         f"{len(data['roster_stints'])} roster stints."
     )
 

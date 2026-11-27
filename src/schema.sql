@@ -66,6 +66,23 @@ CREATE TABLE map_results (
     CHECK (score_a != score_b)
 );
 
+CREATE TABLE player_series_ratings (
+    match_id TEXT NOT NULL REFERENCES matches(match_id) ON DELETE CASCADE,
+    player_id TEXT NOT NULL REFERENCES players(player_id),
+    rating REAL NOT NULL CHECK (rating >= 0),
+    PRIMARY KEY (match_id, player_id)
+);
+
+CREATE TABLE player_map_ratings (
+    match_id TEXT NOT NULL,
+    map_number INTEGER NOT NULL,
+    player_id TEXT NOT NULL REFERENCES players(player_id),
+    rating REAL NOT NULL CHECK (rating >= 0),
+    PRIMARY KEY (match_id, map_number, player_id),
+    FOREIGN KEY (match_id, map_number)
+        REFERENCES map_results(match_id, map_number) ON DELETE CASCADE
+);
+
 CREATE TABLE veto_actions (
     match_id TEXT NOT NULL REFERENCES matches(match_id) ON DELETE CASCADE,
     action_number INTEGER NOT NULL CHECK (action_number > 0),

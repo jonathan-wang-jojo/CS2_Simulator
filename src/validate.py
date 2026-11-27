@@ -1,5 +1,6 @@
 import csv
 import json
+import math
 import re
 import warnings
 from datetime import date
@@ -72,14 +73,11 @@ def _source_url(value, location):
     return value
 
 
-def _hltv_source_url(value, location):
+def _https_source_url(value, location):
     value = _source_url(value, location)
     parsed = urlparse(value)
-    host = (parsed.hostname or "").casefold()
-    if parsed.scheme != "https" or not (
-        host == "hltv.org" or host.endswith(".hltv.org")
-    ):
-        _fail(location, "must be an HTTPS HLTV URL")
+    if parsed.scheme != "https":
+        _fail(location, "must be an HTTPS source URL")
     return value
 
 
@@ -133,7 +131,7 @@ def _load_registry(path):
             row["canonical_name"], f"{location} canonical_name"
         )
         alias = _text(row["alias"], f"{location} alias")
-        source_url = _hltv_source_url(row["source_url"], f"{location} source_url")
+        source_url = _https_source_url(row["source_url"], f"{location} source_url")
 
         previous_name = entities[kind].get(entity_id)
         if previous_name is not None and previous_name != canonical_name:
@@ -345,6 +343,45 @@ def _load_team_list(values, aliases, location):
     return team_ids
 
 
+def _load_player_ratings(raw, aliases, location):
+    if not isinstance(raw, list):
+        _fail(location, "must be a list")
+    ratings = []
+    seen_players = set()
+    for index, row in enumerate(raw):
+        rating_location = f"{location}[{index}]"
+        if not isinstance(row, dict):
+            _fail(rating_location, "must be an object")
+        _warn_unknown(row, {"player", "rating"}, rating_location)
+        player_id = _resolve_name(
+            row.get("player"), aliases, "player", f"{rating_location} player"
+        )
+        if player_id in seen_players:
+            _fail(rating_location, "contains a duplicate player")
+        seen_players.add(player_id)
+
+        value = row.get("rating")
+        if type(value) not in (int, float):
+            _fail(
+                f"{rating_location} rating",
+                "must be a non-negative finite number",
+            )
+        try:
+            rating = float(value)
+        except OverflowError:
+            _fail(
+                f"{rating_location} rating",
+                "must be a non-negative finite number",
+            )
+        if not math.isfinite(rating) or rating < 0:
+            _fail(
+                f"{rating_location} rating",
+                "must be a non-negative finite number",
+            )
+        ratings.append({"player_id": player_id, "rating": rating})
+    return ratings
+
+
 def _compare_cross_check(match, cross_check, event_id):
     if cross_check is None:
         return []
@@ -477,7 +514,7 @@ def _load_event(path, data_dir, aliases, seen):
         "start_date": start_date,
         "end_date": end_date,
         "is_major": int(event["is_major"]),
-        "source_url": _hltv_source_url(
+        "source_url": _https_source_url(
             event.get("source_url"), f"{path} event source_url"
         ),
     }
@@ -565,6 +602,7 @@ def _load_event(path, data_dir, aliases, seen):
             "best_of",
             "source_url",
             "maps",
+            "player_ratings",
             "veto_actions",
             "cross_check",
         }
@@ -615,7 +653,7 @@ def _load_event(path, data_dir, aliases, seen):
         if duplicate_key in seen["match_keys"]:
             _fail(location, "duplicate event/date/team matchup")
         seen["match_keys"].add(duplicate_key)
-        source_url = _hltv_source_url(
+        source_url = _https_source_url(
             match.get("source_url"), f"{location} source_url"
         )
         if source_url in seen["match_sources"]:
@@ -625,11 +663,20 @@ def _load_event(path, data_dir, aliases, seen):
         cross_check = _load_cross_check(
             match, aliases, data_dir, expected_stem, location, source_url
         )
+        player_series_ratings = [
+            {"match_id": match_id, **rating}
+            for rating in _load_player_ratings(
+                match.get("player_ratings", []),
+                aliases,
+                f"{location} player_ratings",
+            )
+        ]
 
         raw_maps = match.get("maps", [])
         if not isinstance(raw_maps, list):
             _fail(f"{location} maps", "must be a list")
         normalized_maps = []
+        player_map_ratings = []
         wins_a = wins_b = 0
         map_ids = set()
         for map_number, map_row in enumerate(raw_maps, start=1):
@@ -638,7 +685,7 @@ def _load_event(path, data_dir, aliases, seen):
                 _fail(map_location, "must be an object")
             _warn_unknown(
                 map_row,
-                {"map_name", "score_a", "score_b"},
+                {"map_name", "score_a", "score_b", "player_ratings"},
                 map_location,
             )
             map_id, map_name = _map_identity(
@@ -655,6 +702,18 @@ def _load_event(path, data_dir, aliases, seen):
                 _fail(map_location, "a played map cannot end in a tie")
             wins_a += int(map_a > map_b)
             wins_b += int(map_b > map_a)
+            player_map_ratings.extend(
+                {
+                    "match_id": match_id,
+                    "map_number": map_number,
+                    **rating,
+                }
+                for rating in _load_player_ratings(
+                    map_row.get("player_ratings", []),
+                    aliases,
+                    f"{map_location} player_ratings",
+                )
+            )
             normalized_maps.append(
                 {
                     "match_id": match_id,
@@ -740,6 +799,8 @@ def _load_event(path, data_dir, aliases, seen):
                 "source_url": source_url,
                 "cross_check": cross_check,
                 "maps": normalized_maps,
+                "player_series_ratings": player_series_ratings,
+                "player_map_ratings": player_map_ratings,
                 "veto_actions": normalized_veto,
             }
         )
@@ -800,6 +861,14 @@ def _load_event(path, data_dir, aliases, seen):
             "expected_team_count": (
                 len(expected_teams) if expected_teams is not None else None
             ),
+            "player_series_rating_count": sum(
+                len(match["player_series_ratings"])
+                for match in normalized_matches
+            ),
+            "player_map_rating_count": sum(
+                len(match["player_map_ratings"])
+                for match in normalized_matches
+            ),
             "cross_checked_count": sum(
                 match["cross_check"] is not None for match in normalized_matches
             ),
@@ -847,7 +916,7 @@ def _load_roster(path, aliases):
         ).casefold()
         if stand_in_value not in {"true", "false"}:
             _fail(f"{location} is_stand_in", "must be 'true' or 'false'")
-        source_url = _hltv_source_url(row["source_url"], f"{location} source_url")
+        source_url = _https_source_url(row["source_url"], f"{location} source_url")
         stint_key = (team_id, player_id, start_date)
         if stint_key in seen:
             _fail(location, "duplicate roster stint")
@@ -885,6 +954,7 @@ def validate_sources(data_dir=DATA_DIR):
 
     entities, aliases, alias_rows = _load_registry(data_dir / "entities.csv")
     events, matches, maps, map_results, veto_actions = [], [], {}, [], []
+    player_series_ratings, player_map_ratings = [], []
     coverage, discrepancies = [], []
     seen = {
         "events": set(),
@@ -903,9 +973,17 @@ def validate_sources(data_dir=DATA_DIR):
                 {
                     key: value
                     for key, value in match.items()
-                    if key not in {"maps", "veto_actions", "cross_check"}
+                    if key not in {
+                        "maps",
+                        "player_series_ratings",
+                        "player_map_ratings",
+                        "veto_actions",
+                        "cross_check",
+                    }
                 }
             )
+            player_series_ratings.extend(match["player_series_ratings"])
+            player_map_ratings.extend(match["player_map_ratings"])
             for map_row in match["maps"]:
                 maps.setdefault(
                     map_row["map_id"],
@@ -950,6 +1028,8 @@ def validate_sources(data_dir=DATA_DIR):
         "matches": matches,
         "maps": list(maps.values()),
         "map_results": map_results,
+        "player_series_ratings": player_series_ratings,
+        "player_map_ratings": player_map_ratings,
         "veto_actions": veto_actions,
         "roster_stints": roster_stints,
         "coverage": coverage,
@@ -965,6 +1045,8 @@ def main():
         "Validated "
         f"{len(data['events'])} events, {len(data['matches'])} matches, "
         f"{len(data['map_results'])} map results, "
+        f"{len(data['player_series_ratings'])} series ratings, "
+        f"{len(data['player_map_ratings'])} map ratings, "
         f"{len(data['roster_stints'])} roster stints."
     )
     for event in data["coverage"]:
