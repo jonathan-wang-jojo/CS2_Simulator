@@ -29,6 +29,7 @@ class DataPipelineTests(unittest.TestCase):
         rows = [
             ("team", "team:alpha", "Team Alpha", "Team Alpha"),
             ("team", "team:alpha", "Team Alpha", "Alpha"),
+            ("team", "team:alpha", "Team Alpha", "Team Alphaa"),
             ("team", "team:bravo", "Team Bravo", "Team Bravo"),
             ("team", "team:charlie", "Team Charlie", "Team Charlie"),
             ("player", "player:one", "Player One", "Player One"),
@@ -143,14 +144,53 @@ class DataPipelineTests(unittest.TestCase):
         )
         return path
 
+    def _add_cross_checks(self, document, mismatched_match_id=None):
+        source_dir = self.data_dir / "source" / "test-event"
+        source_dir.mkdir(parents=True)
+        primary_capture = source_dir / "primary.txt"
+        secondary_capture = source_dir / "secondary.txt"
+        primary_capture.write_text("primary capture\n", encoding="utf-8")
+        secondary_capture.write_text("secondary capture\n", encoding="utf-8")
+        document["event"]["provenance"] = {
+            "retrieved_on": "2026-01-04",
+            "verified_by": "test reviewer",
+            "source_capture_files": [
+                "source/test-event/primary.txt",
+                "source/test-event/secondary.txt",
+            ],
+        }
+        for match in document["matches"]:
+            checked_score_a = match["score_a"]
+            checked_score_b = match["score_b"]
+            if match["match_id"] == mismatched_match_id:
+                checked_score_a, checked_score_b = checked_score_b, checked_score_a
+            match["cross_check"] = {
+                "date": match["date"],
+                "team_a": match["team_a"],
+                "team_b": match["team_b"],
+                "score_a": checked_score_a,
+                "score_b": checked_score_b,
+                "best_of": match["best_of"],
+                "source_url": (
+                    "https://independent.example.test/matches/"
+                    + match["match_id"].rsplit("-", 1)[-1]
+                ),
+                "retrieved_on": "2026-01-04",
+                "verified_by": "test reviewer",
+                "source_capture_file": "source/test-event/secondary.txt",
+            }
+        return primary_capture, secondary_capture
+
     def test_rebuild_creates_normalized_database_and_is_repeatable(self):
         raw_event = self.raw_dir / "test-event.json"
         original_event = raw_event.read_bytes()
 
         data = rebuild_database(self.data_dir, self.database)
+        first_database = self.database.read_bytes()
         rebuild_database(self.data_dir, self.database)
 
         self.assertEqual(len(data["matches"]), 3)
+        self.assertEqual(self.database.read_bytes(), first_database)
         self.assertEqual(raw_event.read_bytes(), original_event)
         with closing(sqlite3.connect(self.database)) as connection:
             self.assertEqual(connection.execute("SELECT COUNT(*) FROM teams").fetchone()[0], 3)
@@ -199,7 +239,7 @@ class DataPipelineTests(unittest.TestCase):
         with self.assertRaisesRegex(ValidationError, "outside the event date range"):
             validate_sources(self.data_dir)
 
-    def test_rejects_duplicate_matchup_with_reversed_team_order(self):
+    def test_rejects_duplicate_matchup_with_reversed_order_and_different_round(self):
         document = self._event_document()
         duplicate = dict(document["matches"][0])
         duplicate.update(
@@ -207,6 +247,7 @@ class DataPipelineTests(unittest.TestCase):
                 "match_id": "match:test-event-004",
                 "team_a": "Team Bravo",
                 "team_b": "Alpha",
+                "round": "A later round",
                 "source_url": "https://example.test/matches/004",
             }
         )
@@ -215,6 +256,89 @@ class DataPipelineTests(unittest.TestCase):
 
         with self.assertRaisesRegex(ValidationError, "duplicate event/date"):
             validate_sources(self.data_dir)
+
+    def test_alias_matching_accepts_case_spacing_and_registered_spelling_variants(self):
+        document = self._event_document()
+        document["matches"][0]["team_a"] = "  tEaM   aLpHaa  "
+        self._write_event(document)
+
+        data = validate_sources(self.data_dir)
+
+        self.assertEqual(data["matches"][0]["team_a_id"], "team:alpha")
+
+    def test_event_roster_and_expected_series_count_are_checked(self):
+        document = self._event_document()
+        document["event"]["teams"] = ["Alpha", "Team Bravo", "Team Charlie"]
+        document["event"]["expected_match_count"] = 3
+        self._write_event(document)
+        self.assertEqual(len(validate_sources(self.data_dir)["matches"]), 3)
+
+        document["event"]["teams"] = ["Alpha", "Team Bravo"]
+        self._write_event(document)
+        with self.assertRaisesRegex(ValidationError, "not listed in event teams"):
+            validate_sources(self.data_dir)
+
+    def test_cross_source_mismatch_is_reported_and_stops_validation(self):
+        document = self._event_document()
+        primary, secondary = self._add_cross_checks(
+            document, mismatched_match_id="match:test-event-001"
+        )
+        original_primary = primary.read_bytes()
+        original_secondary = secondary.read_bytes()
+        self._write_event(document)
+
+        with self.assertRaisesRegex(ValidationError, "human resolution is required"):
+            validate_sources(self.data_dir)
+
+        report = self.data_dir / "reports" / "discrepancies.json"
+        discrepancies = json.loads(report.read_text(encoding="utf-8"))
+        self.assertTrue(
+            any(
+                row["match_id"] == "match:test-event-001"
+                and row["field"].startswith("score:")
+                for row in discrepancies
+            )
+        )
+        self.assertEqual(primary.read_bytes(), original_primary)
+        self.assertEqual(secondary.read_bytes(), original_secondary)
+
+    def test_cross_check_coverage_is_recorded(self):
+        document = self._event_document()
+        self._add_cross_checks(document)
+        self._write_event(document)
+
+        data = validate_sources(self.data_dir)
+
+        self.assertEqual(data["coverage"][0]["cross_checked_count"], 3)
+        self.assertEqual(data["coverage"][0]["discrepancies_found"], 0)
+        self.assertTrue(data["coverage"][0]["provenance_recorded"])
+
+    def test_human_resolution_is_recorded_and_allows_validation(self):
+        document = self._event_document()
+        self._add_cross_checks(document, mismatched_match_id="match:test-event-001")
+        document["event"]["discrepancy_resolutions"] = [
+            {
+                "match_id": "match:test-event-001",
+                "resolved_on": "2026-01-05",
+                "resolved_by": "test reviewer",
+                "resolution": "Primary source confirmed after manual review.",
+            }
+        ]
+        self._write_event(document)
+
+        data = validate_sources(self.data_dir)
+        report = json.loads(
+            (self.data_dir / "reports" / "discrepancies.json").read_text(
+                encoding="utf-8"
+            )
+        )
+
+        self.assertGreater(data["coverage"][0]["discrepancies_found"], 0)
+        self.assertEqual(
+            data["coverage"][0]["discrepancies_resolved"],
+            data["coverage"][0]["discrepancies_found"],
+        )
+        self.assertTrue(all(row["resolved"] for row in report))
 
     def test_roster_unknown_player_must_be_registered(self):
         roster_path = self.raw_dir / "roster_stints.csv"

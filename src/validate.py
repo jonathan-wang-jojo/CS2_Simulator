@@ -4,6 +4,7 @@ import re
 import warnings
 from datetime import date
 from pathlib import Path
+from pathlib import PurePosixPath
 from urllib.parse import urlparse
 
 
@@ -164,7 +165,207 @@ def _resolve_name(value, aliases, kind, location):
     return entity_id
 
 
-def _load_event(path, aliases, seen):
+def _source_capture(value, data_dir, event_slug, location):
+    value = _text(value, location)
+    relative = PurePosixPath(value)
+    if (
+        relative.is_absolute()
+        or ".." in relative.parts
+        or relative.parts[:2] != ("source", event_slug)
+    ):
+        _fail(
+            location,
+            f"must be a relative path under source/{event_slug}/",
+        )
+    capture = data_dir.joinpath(*relative.parts)
+    if not capture.is_file():
+        _fail(location, f"source capture {value!r} is missing")
+    return value
+
+
+def _load_provenance(raw, data_dir, event_slug, location):
+    if raw is None:
+        return None
+    if not isinstance(raw, dict):
+        _fail(location, "must be an object")
+    allowed = {"retrieved_on", "verified_by", "source_capture_files"}
+    _warn_unknown(raw, allowed, location)
+    retrieved_on = _date(raw.get("retrieved_on"), f"{location} retrieved_on")
+    verified_by = _text(raw.get("verified_by"), f"{location} verified_by")
+    capture_files = raw.get("source_capture_files")
+    if not isinstance(capture_files, list) or not capture_files:
+        _fail(f"{location} source_capture_files", "must be a non-empty list")
+    captures = [
+        _source_capture(
+            value,
+            data_dir,
+            event_slug,
+            f"{location} source_capture_files[{index}]",
+        )
+        for index, value in enumerate(capture_files)
+    ]
+    if len(captures) != len(set(captures)):
+        _fail(f"{location} source_capture_files", "contains duplicates")
+    return {
+        "retrieved_on": retrieved_on,
+        "verified_by": verified_by,
+        "source_capture_files": captures,
+    }
+
+
+def _load_cross_check(match, aliases, data_dir, event_slug, location, primary_url):
+    raw = match.get("cross_check")
+    if raw is None:
+        return None
+    if not isinstance(raw, dict):
+        _fail(f"{location} cross_check", "must be an object")
+    fields = {
+        "date",
+        "team_a",
+        "team_b",
+        "score_a",
+        "score_b",
+        "best_of",
+        "source_url",
+        "retrieved_on",
+        "verified_by",
+        "source_capture_file",
+    }
+    _warn_unknown(raw, fields, f"{location} cross_check")
+    checked_date = _date(raw.get("date"), f"{location} cross_check date")
+    team_a_id = _resolve_name(
+        raw.get("team_a"), aliases, "team", f"{location} cross_check team_a"
+    )
+    team_b_id = _resolve_name(
+        raw.get("team_b"), aliases, "team", f"{location} cross_check team_b"
+    )
+    if team_a_id == team_b_id:
+        _fail(f"{location} cross_check", "a team cannot play itself")
+    checked_scores = []
+    for field in ("score_a", "score_b", "best_of"):
+        value = raw.get(field)
+        if type(value) is not int or value < 0:
+            _fail(
+                f"{location} cross_check {field}",
+                "must be a non-negative integer",
+            )
+        checked_scores.append(value)
+    checked_a, checked_b, checked_best_of = checked_scores
+    if checked_best_of == 0 or checked_best_of % 2 == 0:
+        _fail(f"{location} cross_check", "best_of must be a positive odd integer")
+    checked_wins_needed = checked_best_of // 2 + 1
+    if (
+        checked_a == checked_b
+        or max(checked_a, checked_b) != checked_wins_needed
+        or min(checked_a, checked_b) >= checked_wins_needed
+    ):
+        _fail(f"{location} cross_check", "series score is not plausible")
+
+    source_url = _source_url(
+        raw.get("source_url"), f"{location} cross_check source_url"
+    )
+    primary_host = (urlparse(primary_url).hostname or "").casefold().removeprefix("www.")
+    checked_host = (urlparse(source_url).hostname or "").casefold().removeprefix("www.")
+    if checked_host == primary_host:
+        _fail(
+            f"{location} cross_check source_url",
+            "must use an independent source host",
+        )
+    retrieved_on = _date(
+        raw.get("retrieved_on"), f"{location} cross_check retrieved_on"
+    )
+    verified_by = _text(
+        raw.get("verified_by"), f"{location} cross_check verified_by"
+    )
+    capture_file = _source_capture(
+        raw.get("source_capture_file"),
+        data_dir,
+        event_slug,
+        f"{location} cross_check source_capture_file",
+    )
+    cross_check = {
+        "date": checked_date,
+        "team_a_id": team_a_id,
+        "team_b_id": team_b_id,
+        "score_a": checked_a,
+        "score_b": checked_b,
+        "best_of": checked_best_of,
+        "source_url": source_url,
+        "retrieved_on": retrieved_on,
+        "verified_by": verified_by,
+        "source_capture_file": capture_file,
+    }
+    return cross_check
+
+
+def _load_team_list(values, aliases, location):
+    if not isinstance(values, list) or not values:
+        _fail(location, "must be a non-empty list")
+    team_ids = [
+        _resolve_name(value, aliases, "team", f"{location}[{index}]")
+        for index, value in enumerate(values)
+    ]
+    if len(team_ids) != len(set(team_ids)):
+        _fail(location, "contains duplicate teams")
+    return team_ids
+
+
+def _compare_cross_check(match, cross_check, event_id):
+    if cross_check is None:
+        return []
+    discrepancies = []
+    for field in ("date", "best_of"):
+        if match[field] != cross_check[field]:
+            discrepancies.append(
+                {
+                    "match_id": match["match_id"],
+                    "event_id": event_id,
+                    "field": field,
+                    "primary": match[field],
+                    "cross_check": cross_check[field],
+                    "primary_source_url": match["source_url"],
+                    "cross_check_source_url": cross_check["source_url"],
+                }
+            )
+
+    primary_score_by_team = {
+        match["team_a_id"]: match["score_a"],
+        match["team_b_id"]: match["score_b"],
+    }
+    checked_score_by_team = {
+        cross_check["team_a_id"]: cross_check["score_a"],
+        cross_check["team_b_id"]: cross_check["score_b"],
+    }
+    if set(primary_score_by_team) == set(checked_score_by_team):
+        for team_id in primary_score_by_team:
+            if primary_score_by_team[team_id] != checked_score_by_team[team_id]:
+                discrepancies.append(
+                    {
+                        "match_id": match["match_id"],
+                        "event_id": event_id,
+                        "field": f"score:{team_id}",
+                        "primary": primary_score_by_team[team_id],
+                        "cross_check": checked_score_by_team[team_id],
+                        "primary_source_url": match["source_url"],
+                        "cross_check_source_url": cross_check["source_url"],
+                    }
+                )
+    else:
+        discrepancies.append(
+            {
+                "match_id": match["match_id"],
+                "event_id": event_id,
+                "field": "teams",
+                "primary": sorted(primary_score_by_team),
+                "cross_check": sorted(checked_score_by_team),
+                "primary_source_url": match["source_url"],
+                "cross_check_source_url": cross_check["source_url"],
+            }
+        )
+    return discrepancies
+
+
+def _load_event(path, data_dir, aliases, seen):
     try:
         with path.open(encoding="utf-8") as source:
             raw = json.load(source)
@@ -180,6 +381,17 @@ def _load_event(path, aliases, seen):
         _fail(path, "event must be an object")
     if not isinstance(matches, list):
         _fail(path, "matches must be a list")
+    if event.get("stages") or any(
+        isinstance(match, dict)
+        and ("stage" in match or "round_number" in match)
+        for match in matches
+    ):
+        warnings.warn(
+            f"{path}: stage metadata is retained in raw data but is not loaded "
+            "or validated",
+            UserWarning,
+            stacklevel=2,
+        )
 
     event_fields = {
         "event_id",
@@ -191,6 +403,11 @@ def _load_event(path, aliases, seen):
         "end_date",
         "is_major",
         "source_url",
+        "teams",
+        "expected_match_count",
+        "stages",
+        "provenance",
+        "discrepancy_resolutions",
     }
     _warn_unknown(event, event_fields, f"{path} event")
     event_id = _identifier(event.get("event_id"), "event", f"{path} event_id")
@@ -227,9 +444,71 @@ def _load_event(path, aliases, seen):
         "is_major": int(event["is_major"]),
         "source_url": _source_url(event.get("source_url"), f"{path} event source_url"),
     }
+    expected_teams = None
+    if "teams" in event:
+        expected_teams = _load_team_list(
+            event["teams"], aliases, f"{path} event teams"
+        )
+    expected_match_count = event.get("expected_match_count")
+    if expected_match_count is not None and (
+        type(expected_match_count) is not int or expected_match_count < 1
+    ):
+        _fail(
+            f"{path} event expected_match_count",
+            "must be a positive integer",
+        )
+
+    provenance = _load_provenance(
+        event.get("provenance"),
+        data_dir,
+        expected_stem,
+        f"{path} event provenance",
+    )
+
+    raw_resolutions = event.get("discrepancy_resolutions", [])
+    if not isinstance(raw_resolutions, list):
+        _fail(f"{path} event discrepancy_resolutions", "must be a list")
+    resolutions = []
+    for index, raw_resolution in enumerate(raw_resolutions):
+        resolution_location = f"{path} event discrepancy_resolutions[{index}]"
+        if not isinstance(raw_resolution, dict):
+            _fail(resolution_location, "must be an object")
+        _warn_unknown(
+            raw_resolution,
+            {"match_id", "resolved_on", "resolved_by", "resolution"},
+            resolution_location,
+        )
+        resolutions.append(
+            {
+                "match_id": _identifier(
+                    raw_resolution.get("match_id"),
+                    "match",
+                    f"{resolution_location} match_id",
+                ),
+                "resolved_on": _date(
+                    raw_resolution.get("resolved_on"),
+                    f"{resolution_location} resolved_on",
+                ),
+                "resolved_by": _text(
+                    raw_resolution.get("resolved_by"),
+                    f"{resolution_location} resolved_by",
+                ),
+                "resolution": _text(
+                    raw_resolution.get("resolution"),
+                    f"{resolution_location} resolution",
+                ),
+            }
+        )
+    resolution_by_match = {}
+    for resolution in resolutions:
+        match_id = resolution["match_id"]
+        if match_id in resolution_by_match:
+            _fail(path, f"duplicate discrepancy resolution for {match_id}")
+        resolution_by_match[match_id] = resolution
     seen["events"].add(event_id)
 
     normalized_matches = []
+    discrepancies = []
     for index, match in enumerate(matches, start=1):
         location = f"{path} matches[{index - 1}]"
         if not isinstance(match, dict):
@@ -238,6 +517,8 @@ def _load_event(path, aliases, seen):
             "match_id",
             "date",
             "round",
+            "stage",
+            "round_number",
             "team_a",
             "team_b",
             "score_a",
@@ -246,6 +527,7 @@ def _load_event(path, aliases, seen):
             "source_url",
             "maps",
             "veto_actions",
+            "cross_check",
         }
         _warn_unknown(match, match_fields, location)
 
@@ -289,17 +571,19 @@ def _load_event(path, aliases, seen):
         duplicate_key = (
             event_id,
             match_date,
-            round_name,
             tuple(sorted((team_a_id, team_b_id))),
         )
         if duplicate_key in seen["match_keys"]:
-            _fail(location, "duplicate event/date/round/team matchup")
+            _fail(location, "duplicate event/date/team matchup")
         seen["match_keys"].add(duplicate_key)
         source_url = _source_url(match.get("source_url"), f"{location} source_url")
         if source_url in seen["match_sources"]:
             _fail(location, "duplicate match source_url")
         seen["match_sources"].add(source_url)
         seen["matches"].add(match_id)
+        cross_check = _load_cross_check(
+            match, aliases, data_dir, expected_stem, location, source_url
+        )
 
         raw_maps = match.get("maps", [])
         if not isinstance(raw_maps, list):
@@ -413,12 +697,96 @@ def _load_event(path, aliases, seen):
                 "score_b": score_b,
                 "best_of": best_of,
                 "source_url": source_url,
+                "cross_check": cross_check,
                 "maps": normalized_maps,
                 "veto_actions": normalized_veto,
             }
         )
+        discrepancies.extend(
+            _compare_cross_check(normalized_matches[-1], cross_check, event_id)
+        )
 
-    return event_row, normalized_matches
+    discrepancy_match_ids = {row["match_id"] for row in discrepancies}
+    if not set(resolution_by_match) <= discrepancy_match_ids:
+        _fail(path, "discrepancy resolution does not match a current discrepancy")
+    for discrepancy in discrepancies:
+        resolution = resolution_by_match.get(discrepancy["match_id"])
+        discrepancy["resolved"] = resolution is not None
+        if resolution is not None:
+            discrepancy["resolution"] = resolution
+
+    participants = {
+        team_id
+        for match in normalized_matches
+        for team_id in (match["team_a_id"], match["team_b_id"])
+    }
+    if expected_teams is not None:
+        expected_set = set(expected_teams)
+        if not participants <= expected_set:
+            _fail(path, "match team is not listed in event teams")
+        if participants != expected_set:
+            _fail(path, "every listed event team must appear in at least one match")
+    if expected_match_count is not None and len(normalized_matches) != expected_match_count:
+        _fail(
+            path,
+            f"expected {expected_match_count} matches, found {len(normalized_matches)}",
+        )
+    cross_checked_count = sum(
+        match["cross_check"] is not None for match in normalized_matches
+    )
+    if cross_checked_count and provenance is None:
+        _fail(path, "event provenance is required when cross-checks are recorded")
+    if provenance is not None and cross_checked_count != len(normalized_matches):
+        _fail(path, "every match needs a cross_check when event provenance is recorded")
+
+    return {
+        "event": event_row,
+        "matches": normalized_matches,
+        "discrepancies": discrepancies,
+        "coverage": {
+            "event_id": event_id,
+            "sources": sorted(
+                {
+                    event_row["source_url"],
+                    *(
+                        match["source_url"]
+                        for match in normalized_matches
+                    ),
+                    *(
+                        match["cross_check"]["source_url"]
+                        for match in normalized_matches
+                        if match["cross_check"] is not None
+                    ),
+                }
+            ),
+            "series_count": len(normalized_matches),
+            "expected_series_count": expected_match_count,
+            "expected_team_count": (
+                len(expected_teams) if expected_teams is not None else None
+            ),
+            "cross_checked_count": sum(
+                match["cross_check"] is not None for match in normalized_matches
+            ),
+            "cross_check_records": [
+                {
+                    "match_id": match["match_id"],
+                    "source_url": match["cross_check"]["source_url"],
+                    "retrieved_on": match["cross_check"]["retrieved_on"],
+                    "verified_by": match["cross_check"]["verified_by"],
+                    "source_capture_file": match["cross_check"]["source_capture_file"],
+                }
+                for match in normalized_matches
+                if match["cross_check"] is not None
+            ],
+            "discrepancies_found": len(discrepancies),
+            "discrepancies_resolved": sum(
+                row["resolved"] for row in discrepancies
+            ),
+            "discrepancy_resolutions": resolutions,
+            "provenance_recorded": provenance is not None,
+            "provenance": provenance,
+        },
+    }
 
 
 def _load_roster(path, aliases):
@@ -481,6 +849,7 @@ def validate_sources(data_dir=DATA_DIR):
 
     entities, aliases, alias_rows = _load_registry(data_dir / "entities.csv")
     events, matches, maps, map_results, veto_actions = [], [], {}, [], []
+    coverage, discrepancies = [], []
     seen = {
         "events": set(),
         "matches": set(),
@@ -489,14 +858,16 @@ def validate_sources(data_dir=DATA_DIR):
     }
 
     for path in sorted(raw_dir.glob("*.json")):
-        event, event_matches = _load_event(path, aliases, seen)
-        events.append(event)
-        for match in event_matches:
+        loaded = _load_event(path, data_dir, aliases, seen)
+        events.append(loaded["event"])
+        coverage.append(loaded["coverage"])
+        discrepancies.extend(loaded["discrepancies"])
+        for match in loaded["matches"]:
             matches.append(
                 {
                     key: value
                     for key, value in match.items()
-                    if key not in {"maps", "veto_actions"}
+                    if key not in {"maps", "veto_actions", "cross_check"}
                 }
             )
             for map_row in match["maps"]:
@@ -512,6 +883,28 @@ def validate_sources(data_dir=DATA_DIR):
                 )
             veto_actions.extend(match["veto_actions"])
 
+    reports_dir = data_dir / "reports"
+    reports_dir.mkdir(parents=True, exist_ok=True)
+    discrepancy_report = reports_dir / "discrepancies.json"
+    coverage_report = reports_dir / "coverage.json"
+    discrepancy_report.write_text(
+        json.dumps(discrepancies, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    coverage_report.write_text(
+        json.dumps(coverage, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    unresolved_discrepancies = [
+        row for row in discrepancies if not row["resolved"]
+    ]
+    if unresolved_discrepancies:
+        _fail(
+            discrepancy_report,
+            f"{len(unresolved_discrepancies)} unresolved cross-source "
+            "discrepancy(s); "
+            "human resolution is required before validation can continue",
+        )
     roster_stints = _load_roster(raw_dir / "roster_stints.csv", aliases)
 
     return {
@@ -523,6 +916,7 @@ def validate_sources(data_dir=DATA_DIR):
         "map_results": map_results,
         "veto_actions": veto_actions,
         "roster_stints": roster_stints,
+        "coverage": coverage,
     }
 
 
@@ -537,6 +931,14 @@ def main():
         f"{len(data['map_results'])} map results, "
         f"{len(data['roster_stints'])} roster stints."
     )
+    for event in data["coverage"]:
+        print(
+            f"{event['event_id']}: {event['series_count']} series, "
+            f"{event['cross_checked_count']} cross-checked, "
+            f"{event['discrepancies_found']} discrepancies."
+        )
+    print(f"Coverage report: {DATA_DIR / 'reports' / 'coverage.json'}")
+    print(f"Discrepancy report: {DATA_DIR / 'reports' / 'discrepancies.json'}")
 
 
 if __name__ == "__main__":

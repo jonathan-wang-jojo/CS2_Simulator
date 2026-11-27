@@ -47,8 +47,7 @@ CREATE TABLE matches (
     source_url TEXT NOT NULL,
     CHECK (team_a_id != team_b_id),
     CHECK (score_a != score_b),
-    UNIQUE (source_url),
-    UNIQUE (event_id, date, round_name, team_a_id, team_b_id)
+    UNIQUE (source_url)
 );
 
 CREATE TABLE maps (
@@ -91,4 +90,10 @@ CREATE TABLE roster_stints (
 
 CREATE INDEX matches_by_date ON matches(date);
 CREATE INDEX matches_by_event ON matches(event_id, date);
+CREATE UNIQUE INDEX matches_unique_event_date_pair ON matches(
+    event_id,
+    date,
+    CASE WHEN team_a_id < team_b_id THEN team_a_id ELSE team_b_id END,
+    CASE WHEN team_a_id < team_b_id THEN team_b_id ELSE team_a_id END
+);
 CREATE INDEX roster_stints_by_date ON roster_stints(start_date, end_date);

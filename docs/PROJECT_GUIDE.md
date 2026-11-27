@@ -12,7 +12,9 @@ general predictive quality.
 ## Layout
 
 - `data/entities.csv` — stable team/player IDs and sourced name aliases.
-- `data/raw/<event-id>.json` — one unchanged input file per event.
+- `data/raw/<event-id>.json` — normalized event records.
+- `data/source/<event-id>/` — unchanged source captures.
+- `data/reports/` — generated coverage and discrepancy reports.
 - `data/raw/roster_stints.csv` — dated lineup history, entered separately from
   event results.
 - `data/cs.db` — generated normalized database; never edit it directly.
@@ -69,6 +71,8 @@ Plan a schema change if the current format cannot preserve this information.
 Add the canonical name as one of the aliases. Alias matching ignores case and
 surrounding/repeated whitespace. Aliases cannot map to multiple IDs of the same
 type. Unknown names stop the load; the loader never invents entity IDs.
+Known spelling variants must be listed as aliases; validation does not guess
+fuzzy matches.
 
 ### Event files
 
@@ -115,8 +119,64 @@ Each `data/raw/<event-id>.json` contains the event and its match records.
 
 Event fields describe the event window, tier, LAN status, format, and major
 status. Match team names are aliases from `entities.csv`. `round` is optional;
-provide it to distinguish legitimate rematches between the same teams on the
-same date. Match IDs and match source URLs must be unique.
+it retains the published round label. A series between the same teams on the
+same date is rejected even when the round labels differ. Match IDs and match
+source URLs must be unique.
+
+Optional event fields `teams` and `expected_match_count` let validation check
+the expected participant roster and total series count. Each team must appear
+in at least one match. `provenance` records the retrieval date, verifier, and
+relative paths to unchanged captures under `data/source/<event-id>/`.
+
+The optional fields have these shapes:
+
+```json
+{
+  "event": {
+    "teams": ["Vitality", "NAVI"],
+    "expected_match_count": 1,
+    "provenance": {
+      "retrieved_on": "2026-11-27",
+      "verified_by": "researcher",
+      "source_capture_files": ["source/sample-major-2026/results.txt"]
+    }
+  },
+  "matches": [
+    {
+      "cross_check": {
+        "date": "2026-01-02",
+        "team_a": "Vitality",
+        "team_b": "NAVI",
+        "score_a": 2,
+        "score_b": 1,
+        "best_of": 3,
+        "source_url": "https://independent.example/match",
+        "retrieved_on": "2026-11-27",
+        "verified_by": "researcher",
+        "source_capture_file": "source/sample-major-2026/results.txt"
+      }
+    }
+  ]
+}
+```
+
+For a complete second-source check, add a `cross_check` object to every match
+and event-level `provenance`. It records the second source's date, teams,
+series score, best-of, URL, retrieval date, verifier, and capture path. The
+second source must have a different host from the match's primary source.
+Disagreements are written to `data/reports/discrepancies.json` and stop
+validation until a human resolves them. Record the match ID, date, verifier,
+and explanation in `event.discrepancy_resolutions`; validation then retains
+the discrepancy and its resolution in the report rather than selecting a
+source automatically.
+
+Tournament structure is not validated. Stage metadata remains in raw event
+files but is not loaded into the database.
+
+The validator writes `data/reports/coverage.json` with event sources, series
+and cross-check counts, discrepancies and resolutions, and provenance.
+Missing cross-checks or provenance remain visible; legacy event files
+continue to load.
 
 Map results are optional. If entered, include all maps played and ensure their
 individual winners agree with the series score. `veto_actions` is also
@@ -124,31 +184,38 @@ optional; each recorded pick or ban includes its order, acting team, and map.
 Unknown JSON fields (including future player-stat blocks) generate a warning
 and are skipped by the current loader; source files remain unchanged.
 
-### Initial match history
+### Sourced match history
 
-The initial sourced history is the full IEM Chengdu 2025 event: 16 teams and
-30 series from November 3–9, 2025. Event identity and EPT Masters
-classification are sourced from the
+The first sourced event is the full IEM Chengdu 2025 event: 16 teams and 30
+series from November 3–9, 2025. Event identity and EPT Masters classification
+are sourced from the
 [official ESL event page](https://pro.eslgaming.com/tour/cs/chengdu/). Dates
 and format are cross-checked against the
 [HLTV event page](https://www.hltv.org/events/8041/iem-chengdu-2025) and
 [BLAST event results](https://blast.tv/cs/tournaments/iem-chengdu-2025/match).
 Team identities and individual match records link to direct HLTV team and
 match pages in the source files. This slice contains series results only; map
-results, rosters, and player statistics are not included. Since it covers one
-event, it is useful for exercising chronological evaluation but remains a
-limited sample.
+results, rosters, and player statistics are not included. Its existing event
+file predates per-series cross-check and retrieval metadata, so coverage
+reports 0 explicitly cross-checked series.
+
+IEM Cologne Major 2026 adds 32 teams and 106 series from June 2–21, 2026.
+The [ESV results page](https://esport.vision/cs2/tournament/10488-iem-cologne-major-2026)
+and [BLAST results page](https://blast.tv/cs/tournaments/iem-cologne-major-2026/match)
+were cross-checked for every series. Four Stage 1 Sharks/Dendele name
+conflicts were resolved using the user's manual HLTV check, recorded in the
+[verification note](../data/source/iem-cologne-major-2026/hltv-stage1-manual-check.txt).
+Dendele remains a source-observed alias, not a Major entrant. The sites use
+different hosts, but their underlying data lineage is unknown; playoff
+best-of values were inferred from series scores. No maps, rosters, or player
+statistics are included.
 
 ### Adding more history
 
-Add one event at a time using the existing JSON and entity formats. For each
-event, cross-check its dates and format plus a sample of match results against
-another permitted source. Ask a human to resolve conflicts or missing facts;
-note single-source gaps in that event's guide entry, and never guess.
-
-After each batch, run the README quick-start checks. Record the added coverage
-and updated backtest result here. Keep features deferred until multiple events
-support a held-out evaluation.
+Add one event at a time. Preserve source captures, cross-check every series
+against an independent permitted source, and ask a human to resolve conflicts
+or missing facts. After each batch, run the README checks and record coverage
+and backtest results.
 
 ### Roster history
 
@@ -182,9 +249,11 @@ leaves the previous database and all raw files untouched.
 
 Use the commands in the README's Quick start.
 
-The validator rejects unknown aliases, duplicate matches, team self-matches,
-matches outside the event window, invalid series scores, and map results that
-do not agree with the series. Keep source records and evaluation data
+The validator rejects unknown aliases, same-day duplicate series, team
+self-matches, matches outside the event window, invalid series scores, and
+map results that do not agree with the series. It compares all supplied
+second-source assertions, writes mismatches before stopping, and records
+human resolutions. Keep source records and evaluation data
 chronological: each match prediction may use only information known before
 that match date. For time-varying facts, store both the effective date and
 when the fact became known when those differ. Date fields already carry year
@@ -196,14 +265,16 @@ The baseline starts teams at `1500`, uses LAN/online weights, series margin,
 and 180-day rating decay, and predicts all matches on a date before applying
 that date's results.
 
-The IEM Chengdu 2025 slice produced 30 predictions across 16 teams
-(November 3–9, 2025). Its Brier score was `0.25006867`, slightly worse than
-the constant 0.5 baseline (`0.25000000`). This one-event result is
-exploratory, not evidence of predictive quality. Add sourced history across
-events before adding features; evaluate by time or held-out events.
+The original IEM Chengdu 2025 slice produced 30 predictions across 16 teams
+(November 3–9, 2025), with a Brier score of `0.25006867`. The current
+two-event backtest contains 136 predictions across 35 rated teams from
+November 3, 2025 through June 21, 2026. Its Brier score is `0.25052297`,
+slightly worse than the constant 0.5 baseline (`0.25000000`). This remains a
+small exploratory sample, not evidence of predictive quality. Add more
+sourced events before adding features; evaluate by time or held-out events.
 
-Final ratings describe the latest recorded match, not current form. This
-history ends on 2025-11-09, and Elo does not use roster stints.
+Final ratings describe the latest recorded match, not current form, and Elo
+does not use roster stints.
 
 ### Player-feature research (deferred)
 

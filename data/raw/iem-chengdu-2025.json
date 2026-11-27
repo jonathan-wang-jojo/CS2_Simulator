@@ -8,7 +8,8 @@
     "start_date": "2025-11-03",
     "end_date": "2025-11-09",
     "is_major": false,
-    "source_url": "https://pro.eslgaming.com/tour/cs/chengdu/"
+    "source_url": "https://pro.eslgaming.com/tour/cs/chengdu/",
+    "expected_match_count": 30
   },
   "matches": [
     {
