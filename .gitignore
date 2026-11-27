@@ -1,0 +1,20 @@
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Local Python environments
+.venv/
+venv/
+ENV/
+
+# Generated SQLite database and rebuild files
+/data/cs.db
+/data/cs.db-*
+/data/.cs.db.*
+
+# Local OS metadata
+.DS_Store
+Thumbs.db
