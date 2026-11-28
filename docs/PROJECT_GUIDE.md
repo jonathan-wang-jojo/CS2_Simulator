@@ -231,17 +231,15 @@ entity registry and event data, refuses to overwrite an existing event, and
 adds it to `data/raw/<start-year>/`. Register unknown team or player aliases
 in `data/entities.csv` first.
 
-For manual transcription from a results page, create an event metadata JSON
-object and a tab-separated match file, then run
-`python -m src.import_event_tsv event.json matches.tsv`. The event JSON contains
-the fields normally nested under `event`; the TSV requires `date`, `team_a`,
-`team_b`, `score_a`, `score_b`, `best_of`, and `source_url`, with optional
-`round`. Keep one match per row. Match IDs are generated from the event slug
-and row order. The command makes no network requests and sends the generated
-event through the same validation and non-overwriting importer. Set
-`expected_match_count` to the number of played series and include `teams` when
-the full participant list is available. Do not enter forfeits as played
-matches.
+For manual transcription, provide event metadata JSON (the fields nested under
+`event`) and a tab-separated match file, then run
+`python -m src.import_event_tsv event.json matches.tsv`. Required TSV columns
+are `date`, `team_a`, `team_b`, `score_a`, `score_b`, `best_of`, and
+`source_url`; `round` is optional. Use one match per row. Match IDs follow the
+event slug and row order. Import runs locally, applies normal validation, and
+refuses overwrites. Set `expected_match_count` to the number of played series
+and include `teams` when the full participant list is available. Do not enter
+forfeits as played matches.
 
 ### Roster history
 
