@@ -1,0 +1,27 @@
+{
+  "event": {
+    "event_id": "event:blast-bounty-2026-season-1-finals",
+    "name": "BLAST Bounty 2026 Season 1 Finals",
+    "tier": "S",
+    "is_lan": true,
+    "format": "Eight-team single elimination",
+    "start_date": "2026-01-22",
+    "end_date": "2026-01-25",
+    "is_major": false,
+    "source_url": "https://www.hltv.org/events/8246/blast-bounty-2026-season-1-finals",
+    "expected_match_count": 7,
+    "provenance": {
+      "retrieved_on": "2026-11-27",
+      "verified_by": "Copilot-assisted manual HLTV review"
+    }
+  },
+  "matches": [
+    {"match_id":"match:blast-bounty-2026-season-1-finals-001","date":"2026-01-25","team_a":"Falcons","team_b":"PARIVISION","score_a":0,"score_b":3,"best_of":5,"source_url":"https://www.hltv.org/matches/2389281/falcons-vs-parivision-blast-bounty-2026-season-1-finals"},
+    {"match_id":"match:blast-bounty-2026-season-1-finals-002","date":"2026-01-24","team_a":"PARIVISION","team_b":"FURIA","score_a":2,"score_b":0,"best_of":3,"source_url":"https://www.hltv.org/matches/2389280/parivision-vs-furia-blast-bounty-2026-season-1-finals"},
+    {"match_id":"match:blast-bounty-2026-season-1-finals-003","date":"2026-01-24","team_a":"Vitality","team_b":"Falcons","score_a":1,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2389279/vitality-vs-falcons-blast-bounty-2026-season-1-finals"},
+    {"match_id":"match:blast-bounty-2026-season-1-finals-004","date":"2026-01-23","team_a":"PARIVISION","team_b":"Spirit","score_a":2,"score_b":1,"best_of":3,"source_url":"https://www.hltv.org/matches/2389278/parivision-vs-spirit-blast-bounty-2026-season-1-finals"},
+    {"match_id":"match:blast-bounty-2026-season-1-finals-005","date":"2026-01-23","team_a":"GamerLegion","team_b":"Vitality","score_a":0,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2389277/gamerlegion-vs-vitality-blast-bounty-2026-season-1-finals"},
+    {"match_id":"match:blast-bounty-2026-season-1-finals-006","date":"2026-01-22","team_a":"HEROIC","team_b":"FURIA","score_a":1,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2389276/heroic-vs-furia-blast-bounty-2026-season-1-finals"},
+    {"match_id":"match:blast-bounty-2026-season-1-finals-007","date":"2026-01-22","team_a":"Liquid","team_b":"Falcons","score_a":0,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2389275/liquid-vs-falcons-blast-bounty-2026-season-1-finals"}
+  ]
+}

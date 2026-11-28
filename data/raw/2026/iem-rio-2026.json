@@ -1,0 +1,50 @@
+{
+  "event": {
+    "event_id": "event:iem-rio-2026",
+    "name": "IEM Rio 2026",
+    "tier": "S",
+    "is_lan": true,
+    "format": "Two double-elimination groups followed by playoffs",
+    "start_date": "2026-04-13",
+    "end_date": "2026-04-19",
+    "is_major": false,
+    "source_url": "https://www.hltv.org/events/8242/iem-rio-2026",
+    "expected_match_count": 30,
+    "provenance": {
+      "retrieved_on": "2026-11-27",
+      "verified_by": "Copilot-assisted manual HLTV review"
+    }
+  },
+  "matches": [
+    {"match_id":"match:iem-rio-2026-001","date":"2026-04-19","team_a":"Spirit","team_b":"Vitality","score_a":0,"score_b":3,"best_of":5,"source_url":"https://www.hltv.org/matches/2393245/spirit-vs-vitality-iem-rio-2026"},
+    {"match_id":"match:iem-rio-2026-002","date":"2026-04-19","team_a":"Falcons","team_b":"FURIA","score_a":2,"score_b":0,"best_of":3,"source_url":"https://www.hltv.org/matches/2393244/falcons-vs-furia-iem-rio-2026"},
+    {"match_id":"match:iem-rio-2026-003","date":"2026-04-18","team_a":"FURIA","team_b":"Vitality","score_a":0,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2393243/furia-vs-vitality-iem-rio-2026"},
+    {"match_id":"match:iem-rio-2026-004","date":"2026-04-18","team_a":"Falcons","team_b":"Spirit","score_a":0,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2393242/falcons-vs-spirit-iem-rio-2026"},
+    {"match_id":"match:iem-rio-2026-005","date":"2026-04-18","team_a":"Vitality","team_b":"Natus Vincere","score_a":2,"score_b":0,"best_of":3,"source_url":"https://www.hltv.org/matches/2393241/vitality-vs-natus-vincere-iem-rio-2026"},
+    {"match_id":"match:iem-rio-2026-006","date":"2026-04-18","team_a":"Spirit","team_b":"MOUZ","score_a":2,"score_b":0,"best_of":3,"source_url":"https://www.hltv.org/matches/2393240/spirit-vs-mouz-iem-rio-2026"},
+    {"match_id":"match:iem-rio-2026-007","date":"2026-04-17","team_a":"FURIA","team_b":"MOUZ","score_a":2,"score_b":0,"best_of":3,"source_url":"https://www.hltv.org/matches/2393238/furia-vs-mouz-iem-rio-2026"},
+    {"match_id":"match:iem-rio-2026-008","date":"2026-04-17","team_a":"Natus Vincere","team_b":"Aurora","score_a":2,"score_b":1,"best_of":3,"source_url":"https://www.hltv.org/matches/2393239/natus-vincere-vs-aurora-iem-rio-2026"},
+    {"match_id":"match:iem-rio-2026-009","date":"2026-04-17","team_a":"Vitality","team_b":"Falcons","score_a":1,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2393236/vitality-vs-falcons-iem-rio-2026"},
+    {"match_id":"match:iem-rio-2026-010","date":"2026-04-17","team_a":"G2","team_b":"Spirit","score_a":0,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2393237/g2-vs-spirit-iem-rio-2026"},
+    {"match_id":"match:iem-rio-2026-011","date":"2026-04-17","team_a":"B8","team_b":"Aurora","score_a":0,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2393234/b8-vs-aurora-iem-rio-2026"},
+    {"match_id":"match:iem-rio-2026-012","date":"2026-04-17","team_a":"Natus Vincere","team_b":"HOTU","score_a":2,"score_b":0,"best_of":3,"source_url":"https://www.hltv.org/matches/2393235/natus-vincere-vs-hotu-iem-rio-2026"},
+    {"match_id":"match:iem-rio-2026-013","date":"2026-04-15","team_a":"RED Canids","team_b":"Spirit","score_a":1,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2393232/red-canids-vs-spirit-iem-rio-2026"},
+    {"match_id":"match:iem-rio-2026-014","date":"2026-04-15","team_a":"G2","team_b":"3DMAX","score_a":2,"score_b":0,"best_of":3,"source_url":"https://www.hltv.org/matches/2393233/g2-vs-3dmax-iem-rio-2026"},
+    {"match_id":"match:iem-rio-2026-015","date":"2026-04-15","team_a":"MOUZ","team_b":"Aurora","score_a":2,"score_b":0,"best_of":3,"source_url":"https://www.hltv.org/matches/2393230/mouz-vs-aurora-iem-rio-2026"},
+    {"match_id":"match:iem-rio-2026-016","date":"2026-04-15","team_a":"Legacy","team_b":"HOTU","score_a":0,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2393231/legacy-vs-hotu-iem-rio-2026"},
+    {"match_id":"match:iem-rio-2026-017","date":"2026-04-15","team_a":"Natus Vincere","team_b":"FURIA","score_a":1,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2393228/natus-vincere-vs-furia-iem-rio-2026"},
+    {"match_id":"match:iem-rio-2026-018","date":"2026-04-15","team_a":"B8","team_b":"Passion UA","score_a":2,"score_b":0,"best_of":3,"source_url":"https://www.hltv.org/matches/2393229/b8-vs-passion-ua-iem-rio-2026"},
+    {"match_id":"match:iem-rio-2026-019","date":"2026-04-15","team_a":"Spirit","team_b":"Falcons","score_a":0,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2393226/spirit-vs-falcons-iem-rio-2026"},
+    {"match_id":"match:iem-rio-2026-020","date":"2026-04-15","team_a":"Liquid","team_b":"3DMAX","score_a":0,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2393227/liquid-vs-3dmax-iem-rio-2026"},
+    {"match_id":"match:iem-rio-2026-021","date":"2026-04-14","team_a":"Vitality","team_b":"G2","score_a":2,"score_b":1,"best_of":3,"source_url":"https://www.hltv.org/matches/2393224/vitality-vs-g2-iem-rio-2026"},
+    {"match_id":"match:iem-rio-2026-022","date":"2026-04-14","team_a":"RED Canids","team_b":"Gentle Mates","score_a":2,"score_b":1,"best_of":3,"source_url":"https://www.hltv.org/matches/2393225/red-canids-vs-gentle-mates-iem-rio-2026"},
+    {"match_id":"match:iem-rio-2026-023","date":"2026-04-14","team_a":"Aurora","team_b":"HOTU","score_a":2,"score_b":0,"best_of":3,"source_url":"https://www.hltv.org/matches/2393087/aurora-vs-hotu-iem-rio-2026"},
+    {"match_id":"match:iem-rio-2026-024","date":"2026-04-14","team_a":"FURIA","team_b":"Passion UA","score_a":2,"score_b":0,"best_of":3,"source_url":"https://www.hltv.org/matches/2393085/furia-vs-passion-ua-iem-rio-2026"},
+    {"match_id":"match:iem-rio-2026-025","date":"2026-04-14","team_a":"Legacy","team_b":"MOUZ","score_a":1,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2393088/legacy-vs-mouz-iem-rio-2026"},
+    {"match_id":"match:iem-rio-2026-026","date":"2026-04-14","team_a":"B8","team_b":"Natus Vincere","score_a":1,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2393086/b8-vs-natus-vincere-iem-rio-2026"},
+    {"match_id":"match:iem-rio-2026-027","date":"2026-04-14","team_a":"3DMAX","team_b":"Falcons","score_a":0,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2393084/3dmax-vs-falcons-iem-rio-2026"},
+    {"match_id":"match:iem-rio-2026-028","date":"2026-04-14","team_a":"Spirit","team_b":"Liquid","score_a":2,"score_b":0,"best_of":3,"source_url":"https://www.hltv.org/matches/2393083/spirit-vs-liquid-iem-rio-2026"},
+    {"match_id":"match:iem-rio-2026-029","date":"2026-04-13","team_a":"Gentle Mates","team_b":"G2","score_a":1,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2393082/gentle-mates-vs-g2-iem-rio-2026"},
+    {"match_id":"match:iem-rio-2026-030","date":"2026-04-13","team_a":"Vitality","team_b":"RED Canids","score_a":2,"score_b":0,"best_of":3,"source_url":"https://www.hltv.org/matches/2393081/vitality-vs-red-canids-iem-rio-2026"}
+  ]
+}

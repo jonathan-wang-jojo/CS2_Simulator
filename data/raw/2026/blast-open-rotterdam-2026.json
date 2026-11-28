@@ -1,0 +1,49 @@
+{
+  "event": {
+    "event_id": "event:blast-open-rotterdam-2026",
+    "name": "BLAST Open Rotterdam 2026",
+    "tier": "S",
+    "is_lan": true,
+    "format": "Two double-elimination groups followed by playoffs",
+    "start_date": "2026-03-18",
+    "end_date": "2026-03-29",
+    "is_major": false,
+    "source_url": "https://www.hltv.org/events/8248/blast-open-rotterdam-2026",
+    "expected_match_count": 29,
+    "provenance": {
+      "retrieved_on": "2026-11-27",
+      "verified_by": "Copilot-assisted manual HLTV review"
+    }
+  },
+  "matches": [
+    {"match_id":"match:blast-open-rotterdam-2026-001","date":"2026-03-29","team_a":"Vitality","team_b":"Natus Vincere","score_a":3,"score_b":0,"best_of":5,"source_url":"https://www.hltv.org/matches/2391775/vitality-vs-natus-vincere-blast-open-rotterdam-2026"},
+    {"match_id":"match:blast-open-rotterdam-2026-002","date":"2026-03-28","team_a":"Natus Vincere","team_b":"PARIVISION","score_a":2,"score_b":1,"best_of":3,"source_url":"https://www.hltv.org/matches/2391774/natus-vincere-vs-parivision-blast-open-rotterdam-2026"},
+    {"match_id":"match:blast-open-rotterdam-2026-003","date":"2026-03-28","team_a":"Vitality","team_b":"Aurora","score_a":2,"score_b":0,"best_of":3,"source_url":"https://www.hltv.org/matches/2391773/vitality-vs-aurora-blast-open-rotterdam-2026"},
+    {"match_id":"match:blast-open-rotterdam-2026-004","date":"2026-03-27","team_a":"PARIVISION","team_b":"Falcons","score_a":2,"score_b":0,"best_of":3,"source_url":"https://www.hltv.org/matches/2391772/parivision-vs-falcons-blast-open-rotterdam-2026"},
+    {"match_id":"match:blast-open-rotterdam-2026-005","date":"2026-03-27","team_a":"Aurora","team_b":"The MongolZ","score_a":2,"score_b":0,"best_of":3,"source_url":"https://www.hltv.org/matches/2391771/aurora-vs-the-mongolz-blast-open-rotterdam-2026"},
+    {"match_id":"match:blast-open-rotterdam-2026-006","date":"2026-03-23","team_a":"The MongolZ","team_b":"Spirit","score_a":2,"score_b":0,"best_of":3,"source_url":"https://www.hltv.org/matches/2391770/the-mongolz-vs-spirit-blast-open-rotterdam-2026"},
+    {"match_id":"match:blast-open-rotterdam-2026-007","date":"2026-03-23","team_a":"PARIVISION","team_b":"Vitality","score_a":0,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2391769/parivision-vs-vitality-blast-open-rotterdam-2026"},
+    {"match_id":"match:blast-open-rotterdam-2026-008","date":"2026-03-23","team_a":"Falcons","team_b":"FURIA","score_a":2,"score_b":1,"best_of":3,"source_url":"https://www.hltv.org/matches/2391768/falcons-vs-furia-blast-open-rotterdam-2026"},
+    {"match_id":"match:blast-open-rotterdam-2026-009","date":"2026-03-23","team_a":"Natus Vincere","team_b":"Aurora","score_a":2,"score_b":0,"best_of":3,"source_url":"https://www.hltv.org/matches/2391767/natus-vincere-vs-aurora-blast-open-rotterdam-2026"},
+    {"match_id":"match:blast-open-rotterdam-2026-010","date":"2026-03-22","team_a":"9z","team_b":"Spirit","score_a":0,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2391766/9z-vs-spirit-blast-open-rotterdam-2026"},
+    {"match_id":"match:blast-open-rotterdam-2026-011","date":"2026-03-22","team_a":"Liquid","team_b":"The MongolZ","score_a":0,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2391765/liquid-vs-the-mongolz-blast-open-rotterdam-2026"},
+    {"match_id":"match:blast-open-rotterdam-2026-012","date":"2026-03-22","team_a":"NRG","team_b":"FURIA","score_a":1,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2391763/nrg-vs-furia-blast-open-rotterdam-2026"},
+    {"match_id":"match:blast-open-rotterdam-2026-013","date":"2026-03-22","team_a":"TYLOO","team_b":"Falcons","score_a":1,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2391764/tyloo-vs-falcons-blast-open-rotterdam-2026"},
+    {"match_id":"match:blast-open-rotterdam-2026-014","date":"2026-03-21","team_a":"The MongolZ","team_b":"Vitality","score_a":0,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2391762/the-mongolz-vs-vitality-blast-open-rotterdam-2026"},
+    {"match_id":"match:blast-open-rotterdam-2026-015","date":"2026-03-21","team_a":"PARIVISION","team_b":"Spirit","score_a":2,"score_b":0,"best_of":3,"source_url":"https://www.hltv.org/matches/2391761/parivision-vs-spirit-blast-open-rotterdam-2026"},
+    {"match_id":"match:blast-open-rotterdam-2026-016","date":"2026-03-21","team_a":"MOUZ","team_b":"9z","score_a":1,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2391760/mouz-vs-9z-blast-open-rotterdam-2026"},
+    {"match_id":"match:blast-open-rotterdam-2026-017","date":"2026-03-21","team_a":"Ninjas in Pyjamas","team_b":"Liquid","score_a":1,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2391759/ninjas-in-pyjamas-vs-liquid-blast-open-rotterdam-2026"},
+    {"match_id":"match:blast-open-rotterdam-2026-018","date":"2026-03-20","team_a":"Aurora","team_b":"FURIA","score_a":2,"score_b":0,"best_of":3,"source_url":"https://www.hltv.org/matches/2391758/aurora-vs-furia-blast-open-rotterdam-2026"},
+    {"match_id":"match:blast-open-rotterdam-2026-019","date":"2026-03-20","team_a":"Falcons","team_b":"Natus Vincere","score_a":1,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2391757/falcons-vs-natus-vincere-blast-open-rotterdam-2026"},
+    {"match_id":"match:blast-open-rotterdam-2026-020","date":"2026-03-20","team_a":"FaZe","team_b":"TYLOO","score_a":1,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2391756/faze-vs-tyloo-blast-open-rotterdam-2026"},
+    {"match_id":"match:blast-open-rotterdam-2026-021","date":"2026-03-20","team_a":"NRG","team_b":"B8","score_a":2,"score_b":0,"best_of":3,"source_url":"https://www.hltv.org/matches/2391755/nrg-vs-b8-blast-open-rotterdam-2026"},
+    {"match_id":"match:blast-open-rotterdam-2026-022","date":"2026-03-19","team_a":"Vitality","team_b":"9z","score_a":2,"score_b":0,"best_of":3,"source_url":"https://www.hltv.org/matches/2390818/vitality-vs-9z-blast-open-rotterdam-2026"},
+    {"match_id":"match:blast-open-rotterdam-2026-023","date":"2026-03-19","team_a":"MOUZ","team_b":"The MongolZ","score_a":0,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2390817/mouz-vs-the-mongolz-blast-open-rotterdam-2026"},
+    {"match_id":"match:blast-open-rotterdam-2026-024","date":"2026-03-19","team_a":"Spirit","team_b":"Liquid","score_a":2,"score_b":0,"best_of":3,"source_url":"https://www.hltv.org/matches/2390816/spirit-vs-liquid-blast-open-rotterdam-2026"},
+    {"match_id":"match:blast-open-rotterdam-2026-025","date":"2026-03-19","team_a":"PARIVISION","team_b":"Ninjas in Pyjamas","score_a":2,"score_b":1,"best_of":3,"source_url":"https://www.hltv.org/matches/2390815/parivision-vs-ninjas-in-pyjamas-blast-open-rotterdam-2026"},
+    {"match_id":"match:blast-open-rotterdam-2026-026","date":"2026-03-18","team_a":"FURIA","team_b":"TYLOO","score_a":2,"score_b":0,"best_of":3,"source_url":"https://www.hltv.org/matches/2390814/furia-vs-tyloo-blast-open-rotterdam-2026"},
+    {"match_id":"match:blast-open-rotterdam-2026-027","date":"2026-03-18","team_a":"FaZe","team_b":"Aurora","score_a":1,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2390813/faze-vs-aurora-blast-open-rotterdam-2026"},
+    {"match_id":"match:blast-open-rotterdam-2026-028","date":"2026-03-18","team_a":"Natus Vincere","team_b":"B8","score_a":2,"score_b":1,"best_of":3,"source_url":"https://www.hltv.org/matches/2390812/natus-vincere-vs-b8-blast-open-rotterdam-2026"},
+    {"match_id":"match:blast-open-rotterdam-2026-029","date":"2026-03-18","team_a":"Falcons","team_b":"NRG","score_a":2,"score_b":0,"best_of":3,"source_url":"https://www.hltv.org/matches/2390811/falcons-vs-nrg-blast-open-rotterdam-2026"}
+  ]
+}

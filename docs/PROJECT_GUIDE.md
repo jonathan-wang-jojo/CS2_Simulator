@@ -199,6 +199,20 @@ IEM Chengdu 2025 is active with 30 HLTV-linked series. IEM Cologne Major 2026
 Stages 1 and 2 are active with 33 series each. Stage 3 and playoffs are
 separate event files with 33 and 7 series, respectively.
 
+The manually reviewed Jan-Mar 2026 batch adds 7 event files and 172 series:
+BLAST Bounty Season 1 (24 online-stage series and 7 finals series), IEM Krakow
+(30), PGL Cluj-Napoca (41), ESL Pro League Season 23 (33 Stage 2 and 8 finals
+series), and BLAST Open Rotterdam (29).
+
+The manually reviewed Apr-May 2026 batch adds 5 event files and 153 played
+series: PGL Bucharest (39), IEM Rio (30), BLAST Rivals Season 1 (13), PGL
+Astana (41), and IEM Atlanta (30). Forfeits are excluded because they are not
+played series. The PGL Major Singapore 2026 is excluded per request. For this
+2026 inventory, an event qualifies with a prize pool of at least $250,000 or
+at least four top-10 teams according to the last HLTV ranking before its
+start; separately listed qualifiers are included only when they meet that
+threshold.
+
 ### Adding more history
 
 Add one event at a time. Verify each fact against a source that supports it and
@@ -216,6 +230,18 @@ path. The importer reads a local file only, validates it against the current
 entity registry and event data, refuses to overwrite an existing event, and
 adds it to `data/raw/<start-year>/`. Register unknown team or player aliases
 in `data/entities.csv` first.
+
+For manual transcription from a results page, create an event metadata JSON
+object and a tab-separated match file, then run
+`python -m src.import_event_tsv event.json matches.tsv`. The event JSON contains
+the fields normally nested under `event`; the TSV requires `date`, `team_a`,
+`team_b`, `score_a`, `score_b`, `best_of`, and `source_url`, with optional
+`round`. Keep one match per row. Match IDs are generated from the event slug
+and row order. The command makes no network requests and sends the generated
+event through the same validation and non-overwriting importer. Set
+`expected_match_count` to the number of played series and include `teams` when
+the full participant list is available. Do not enter forfeits as played
+matches.
 
 ### Roster history
 
@@ -267,10 +293,11 @@ The baseline starts teams at `1500`, uses LAN/online weights, series margin,
 and 180-day rating decay, and predicts all matches on a date before applying
 that date's results.
 
-IEM Chengdu 2025 and IEM Cologne Major 2026 Stages 1, 2, 3, and Playoffs are
-active historical data. Player ratings are supported but have not yet been
-populated. The backtest currently uses series results only; it does not use
-map or player ratings.
+IEM Chengdu 2025, IEM Cologne Major 2026 Stages 1, 2, 3, and Playoffs, and the
+Jan-May 2026 event batches are active historical data. Together these contain
+17 events and 461 played series. Player ratings are supported but have not yet
+been populated. The backtest currently uses series results only; it does not
+use map or player ratings.
 
 Final ratings describe the latest recorded match, not current form, and Elo
 does not use roster stints.

@@ -1,0 +1,50 @@
+{
+  "event": {
+    "event_id": "event:iem-atlanta-2026",
+    "name": "IEM Atlanta 2026",
+    "tier": "S",
+    "is_lan": true,
+    "format": "Two double-elimination groups followed by playoffs",
+    "start_date": "2026-05-11",
+    "end_date": "2026-05-17",
+    "is_major": false,
+    "source_url": "https://www.hltv.org/events/8243/iem-atlanta-2026",
+    "expected_match_count": 30,
+    "provenance": {
+      "retrieved_on": "2026-11-27",
+      "verified_by": "Copilot-assisted manual HLTV review"
+    }
+  },
+  "matches": [
+    {"match_id":"match:iem-atlanta-2026-001","date":"2026-05-17","team_a":"GamerLegion","team_b":"Natus Vincere","score_a":0,"score_b":3,"best_of":5,"source_url":"https://www.hltv.org/matches/2394178/gamerlegion-vs-natus-vincere-iem-atlanta-2026"},
+    {"match_id":"match:iem-atlanta-2026-002","date":"2026-05-17","team_a":"Legacy","team_b":"BETBOOM","score_a":2,"score_b":0,"best_of":3,"source_url":"https://www.hltv.org/matches/2394177/legacy-vs-betboom-iem-atlanta-2026"},
+    {"match_id":"match:iem-atlanta-2026-003","date":"2026-05-16","team_a":"BETBOOM","team_b":"Natus Vincere","score_a":0,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2394175/betboom-vs-natus-vincere-iem-atlanta-2026"},
+    {"match_id":"match:iem-atlanta-2026-004","date":"2026-05-16","team_a":"Legacy","team_b":"GamerLegion","score_a":1,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2394176/legacy-vs-gamerlegion-iem-atlanta-2026"},
+    {"match_id":"match:iem-atlanta-2026-005","date":"2026-05-15","team_a":"Natus Vincere","team_b":"Vitality","score_a":2,"score_b":1,"best_of":3,"source_url":"https://www.hltv.org/matches/2394174/natus-vincere-vs-vitality-iem-atlanta-2026"},
+    {"match_id":"match:iem-atlanta-2026-006","date":"2026-05-15","team_a":"paiN","team_b":"GamerLegion","score_a":1,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2394173/pain-vs-gamerlegion-iem-atlanta-2026"},
+    {"match_id":"match:iem-atlanta-2026-007","date":"2026-05-13","team_a":"Natus Vincere","team_b":"Legacy","score_a":1,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2394171/natus-vincere-vs-legacy-iem-atlanta-2026"},
+    {"match_id":"match:iem-atlanta-2026-008","date":"2026-05-13","team_a":"GamerLegion","team_b":"Astralis","score_a":2,"score_b":0,"best_of":3,"source_url":"https://www.hltv.org/matches/2394172/gamerlegion-vs-astralis-iem-atlanta-2026"},
+    {"match_id":"match:iem-atlanta-2026-009","date":"2026-05-13","team_a":"BETBOOM","team_b":"paiN","score_a":2,"score_b":1,"best_of":3,"source_url":"https://www.hltv.org/matches/2394169/betboom-vs-pain-iem-atlanta-2026"},
+    {"match_id":"match:iem-atlanta-2026-010","date":"2026-05-13","team_a":"B8","team_b":"Vitality","score_a":0,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2394170/b8-vs-vitality-iem-atlanta-2026"},
+    {"match_id":"match:iem-atlanta-2026-011","date":"2026-05-13","team_a":"SINNERS","team_b":"Astralis","score_a":0,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2394167/sinners-vs-astralis-iem-atlanta-2026"},
+    {"match_id":"match:iem-atlanta-2026-012","date":"2026-05-13","team_a":"GamerLegion","team_b":"Liquid","score_a":2,"score_b":0,"best_of":3,"source_url":"https://www.hltv.org/matches/2394168/gamerlegion-vs-liquid-iem-atlanta-2026"},
+    {"match_id":"match:iem-atlanta-2026-013","date":"2026-05-13","team_a":"FaZe","team_b":"Vitality","score_a":0,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2394166/faze-vs-vitality-iem-atlanta-2026"},
+    {"match_id":"match:iem-atlanta-2026-014","date":"2026-05-13","team_a":"B8","team_b":"FUT","score_a":2,"score_b":0,"best_of":3,"source_url":"https://www.hltv.org/matches/2394165/b8-vs-fut-iem-atlanta-2026"},
+    {"match_id":"match:iem-atlanta-2026-015","date":"2026-05-12","team_a":"Liquid","team_b":"M80","score_a":2,"score_b":1,"best_of":3,"source_url":"https://www.hltv.org/matches/2394164/liquid-vs-m80-iem-atlanta-2026"},
+    {"match_id":"match:iem-atlanta-2026-016","date":"2026-05-12","team_a":"Astralis","team_b":"Legacy","score_a":0,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2394162/astralis-vs-legacy-iem-atlanta-2026"},
+    {"match_id":"match:iem-atlanta-2026-017","date":"2026-05-12","team_a":"Passion UA","team_b":"SINNERS","score_a":1,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2394163/passion-ua-vs-sinners-iem-atlanta-2026"},
+    {"match_id":"match:iem-atlanta-2026-018","date":"2026-05-12","team_a":"Natus Vincere","team_b":"GamerLegion","score_a":2,"score_b":1,"best_of":3,"source_url":"https://www.hltv.org/matches/2394161/natus-vincere-vs-gamerlegion-iem-atlanta-2026"},
+    {"match_id":"match:iem-atlanta-2026-019","date":"2026-05-12","team_a":"paiN","team_b":"FUT","score_a":2,"score_b":1,"best_of":3,"source_url":"https://www.hltv.org/matches/2394158/pain-vs-fut-iem-atlanta-2026"},
+    {"match_id":"match:iem-atlanta-2026-020","date":"2026-05-12","team_a":"BETBOOM","team_b":"Vitality","score_a":2,"score_b":1,"best_of":3,"source_url":"https://www.hltv.org/matches/2394157/betboom-vs-vitality-iem-atlanta-2026"},
+    {"match_id":"match:iem-atlanta-2026-021","date":"2026-05-12","team_a":"FaZe","team_b":"NRG","score_a":2,"score_b":0,"best_of":3,"source_url":"https://www.hltv.org/matches/2394160/faze-vs-nrg-iem-atlanta-2026"},
+    {"match_id":"match:iem-atlanta-2026-022","date":"2026-05-12","team_a":"B8","team_b":"BC.Game","score_a":2,"score_b":0,"best_of":3,"source_url":"https://www.hltv.org/matches/2394159/b8-vs-bcgame-iem-atlanta-2026"},
+    {"match_id":"match:iem-atlanta-2026-023","date":"2026-05-11","team_a":"Legacy","team_b":"M80","score_a":2,"score_b":0,"best_of":3,"source_url":"https://www.hltv.org/matches/2394114/legacy-vs-m80-iem-atlanta-2026"},
+    {"match_id":"match:iem-atlanta-2026-024","date":"2026-05-11","team_a":"Liquid","team_b":"Astralis","score_a":0,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2394115/liquid-vs-astralis-iem-atlanta-2026"},
+    {"match_id":"match:iem-atlanta-2026-025","date":"2026-05-11","team_a":"SINNERS","team_b":"GamerLegion","score_a":1,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2394113/sinners-vs-gamerlegion-iem-atlanta-2026"},
+    {"match_id":"match:iem-atlanta-2026-026","date":"2026-05-11","team_a":"Natus Vincere","team_b":"Passion UA","score_a":2,"score_b":0,"best_of":3,"source_url":"https://www.hltv.org/matches/2394112/natus-vincere-vs-passion-ua-iem-atlanta-2026"},
+    {"match_id":"match:iem-atlanta-2026-027","date":"2026-05-11","team_a":"NRG","team_b":"FUT","score_a":0,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2394111/nrg-vs-fut-iem-atlanta-2026"},
+    {"match_id":"match:iem-atlanta-2026-028","date":"2026-05-11","team_a":"Vitality","team_b":"BC.Game","score_a":2,"score_b":0,"best_of":3,"source_url":"https://www.hltv.org/matches/2394108/vitality-vs-bcgame-iem-atlanta-2026"},
+    {"match_id":"match:iem-atlanta-2026-029","date":"2026-05-11","team_a":"B8","team_b":"BETBOOM","score_a":1,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2394109/b8-vs-betboom-iem-atlanta-2026"},
+    {"match_id":"match:iem-atlanta-2026-030","date":"2026-05-11","team_a":"paiN","team_b":"FaZe","score_a":2,"score_b":0,"best_of":3,"source_url":"https://www.hltv.org/matches/2394110/pain-vs-faze-iem-atlanta-2026"}
+  ]
+}

@@ -8,6 +8,7 @@ from contextlib import closing
 from pathlib import Path
 
 from src.import_event import import_event
+from src.import_event_tsv import import_event_from_tsv
 from src.load import rebuild_database
 from src.validate import ValidationError, validate_sources
 
@@ -458,6 +459,97 @@ class DataPipelineTests(unittest.TestCase):
             )
         )
         self.assertEqual(len(coverage), 2)
+
+    def test_import_event_tsv_generates_match_ids_and_imports_rows(self):
+        event = self._event_document()["event"]
+        event["event_id"] = "event:tsv-event"
+        event["source_url"] = "https://www.hltv.org/events/tsv-event"
+        event["teams"] = ["Team Alpha", "Team Bravo", "Team Charlie"]
+        event["expected_match_count"] = 2
+        metadata_path = self.data_dir.parent / "tsv-event.json"
+        metadata_path.write_text(json.dumps(event), encoding="utf-8")
+
+        matches_path = self.data_dir.parent / "tsv-matches.tsv"
+        with matches_path.open("w", newline="", encoding="utf-8") as output:
+            writer = csv.DictWriter(
+                output,
+                delimiter="\t",
+                fieldnames=[
+                    "date",
+                    "team_a",
+                    "team_b",
+                    "score_a",
+                    "score_b",
+                    "best_of",
+                    "source_url",
+                    "round",
+                ],
+            )
+            writer.writeheader()
+            writer.writerows(
+                [
+                    {
+                        "date": "2026-01-01",
+                        "team_a": "Alpha",
+                        "team_b": "Team Bravo",
+                        "score_a": 2,
+                        "score_b": 0,
+                        "best_of": 3,
+                        "source_url": "https://www.hltv.org/matches/tsv-001",
+                        "round": "Swiss round 1",
+                    },
+                    {
+                        "date": "2026-01-02",
+                        "team_a": "Team Alpha",
+                        "team_b": "Team Charlie",
+                        "score_a": 2,
+                        "score_b": 1,
+                        "best_of": 3,
+                        "source_url": "https://www.hltv.org/matches/tsv-002",
+                    },
+                ]
+            )
+
+        destination = import_event_from_tsv(
+            metadata_path,
+            matches_path,
+            self.data_dir,
+        )
+
+        imported = json.loads(destination.read_text(encoding="utf-8"))
+        self.assertEqual(
+            [match["match_id"] for match in imported["matches"]],
+            ["match:tsv-event-001", "match:tsv-event-002"],
+        )
+        self.assertEqual(imported["matches"][0]["round"], "Swiss round 1")
+        self.assertEqual(imported["matches"][1]["score_b"], 1)
+        self.assertEqual(len(validate_sources(self.data_dir)["events"]), 2)
+
+        original_content = destination.read_bytes()
+        with self.assertRaisesRegex(FileExistsError, "destination already exists"):
+            import_event_from_tsv(metadata_path, matches_path, self.data_dir)
+        self.assertEqual(destination.read_bytes(), original_content)
+
+    def test_import_event_tsv_rejects_bad_integer_without_importing(self):
+        event = self._event_document()["event"]
+        event["event_id"] = "event:invalid-tsv-event"
+        metadata_path = self.data_dir.parent / "invalid-tsv-event.json"
+        metadata_path.write_text(json.dumps(event), encoding="utf-8")
+
+        matches_path = self.data_dir.parent / "invalid-tsv-matches.tsv"
+        matches_path.write_text(
+            "date\tteam_a\tteam_b\tscore_a\tscore_b\tbest_of\tsource_url\n"
+            "2026-01-01\tAlpha\tTeam Bravo\twin\t0\t3\t"
+            "https://www.hltv.org/matches/invalid-tsv\n",
+            encoding="utf-8",
+        )
+
+        with self.assertRaisesRegex(ValidationError, "score_a must be an integer"):
+            import_event_from_tsv(metadata_path, matches_path, self.data_dir)
+
+        self.assertFalse(
+            (self.raw_dir / "2026" / "invalid-tsv-event.json").exists()
+        )
 
     def test_import_event_rejects_invalid_export_without_copying(self):
         document = self._event_document()

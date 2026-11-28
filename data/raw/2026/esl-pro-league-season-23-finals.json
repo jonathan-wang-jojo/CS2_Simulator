@@ -1,0 +1,28 @@
+{
+  "event": {
+    "event_id": "event:esl-pro-league-season-23-finals",
+    "name": "ESL Pro League Season 23 Finals",
+    "tier": "S",
+    "is_lan": true,
+    "format": "Eight-team single elimination with third-place match",
+    "start_date": "2026-03-13",
+    "end_date": "2026-03-15",
+    "is_major": false,
+    "source_url": "https://www.hltv.org/events/8413/esl-pro-league-season-23-finals",
+    "expected_match_count": 8,
+    "provenance": {
+      "retrieved_on": "2026-11-27",
+      "verified_by": "Copilot-assisted manual HLTV review"
+    }
+  },
+  "matches": [
+    {"match_id":"match:esl-pro-league-season-23-finals-001","date":"2026-03-15","team_a":"Natus Vincere","team_b":"Aurora","score_a":3,"score_b":1,"best_of":5,"source_url":"https://www.hltv.org/matches/2391141/natus-vincere-vs-aurora-esl-pro-league-season-23-finals"},
+    {"match_id":"match:esl-pro-league-season-23-finals-002","date":"2026-03-15","team_a":"FUT","team_b":"Astralis","score_a":1,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2391140/fut-vs-astralis-esl-pro-league-season-23-finals"},
+    {"match_id":"match:esl-pro-league-season-23-finals-003","date":"2026-03-14","team_a":"Aurora","team_b":"Astralis","score_a":2,"score_b":1,"best_of":3,"source_url":"https://www.hltv.org/matches/2391138/aurora-vs-astralis-esl-pro-league-season-23-finals"},
+    {"match_id":"match:esl-pro-league-season-23-finals-004","date":"2026-03-14","team_a":"Natus Vincere","team_b":"FUT","score_a":2,"score_b":1,"best_of":3,"source_url":"https://www.hltv.org/matches/2391139/natus-vincere-vs-fut-esl-pro-league-season-23-finals"},
+    {"match_id":"match:esl-pro-league-season-23-finals-005","date":"2026-03-13","team_a":"Astralis","team_b":"Spirit","score_a":2,"score_b":0,"best_of":3,"source_url":"https://www.hltv.org/matches/2391137/astralis-vs-spirit-esl-pro-league-season-23-finals"},
+    {"match_id":"match:esl-pro-league-season-23-finals-006","date":"2026-03-13","team_a":"MOUZ","team_b":"FUT","score_a":1,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2391136/mouz-vs-fut-esl-pro-league-season-23-finals"},
+    {"match_id":"match:esl-pro-league-season-23-finals-007","date":"2026-03-13","team_a":"Legacy","team_b":"Aurora","score_a":1,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2391135/legacy-vs-aurora-esl-pro-league-season-23-finals"},
+    {"match_id":"match:esl-pro-league-season-23-finals-008","date":"2026-03-13","team_a":"The MongolZ","team_b":"Natus Vincere","score_a":0,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2391134/the-mongolz-vs-natus-vincere-esl-pro-league-season-23-finals"}
+  ]
+}

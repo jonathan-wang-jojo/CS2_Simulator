@@ -1,0 +1,33 @@
+{
+  "event": {
+    "event_id": "event:blast-rivals-2026-season-1",
+    "name": "BLAST Rivals 2026 Season 1",
+    "tier": "S",
+    "is_lan": true,
+    "format": "Two double-elimination groups followed by playoffs",
+    "start_date": "2026-04-29",
+    "end_date": "2026-05-03",
+    "is_major": false,
+    "source_url": "https://www.hltv.org/events/8250/blast-rivals-2026-season-1",
+    "expected_match_count": 13,
+    "provenance": {
+      "retrieved_on": "2026-11-27",
+      "verified_by": "Copilot-assisted manual HLTV review"
+    }
+  },
+  "matches": [
+    {"match_id":"match:blast-rivals-2026-season-1-001","date":"2026-05-03","team_a":"Natus Vincere","team_b":"Vitality","score_a":0,"score_b":3,"best_of":5,"source_url":"https://www.hltv.org/matches/2393350/natus-vincere-vs-vitality-blast-rivals-2026-season-1"},
+    {"match_id":"match:blast-rivals-2026-season-1-002","date":"2026-05-03","team_a":"Vitality","team_b":"GamerLegion","score_a":2,"score_b":0,"best_of":3,"source_url":"https://www.hltv.org/matches/2393349/vitality-vs-gamerlegion-blast-rivals-2026-season-1"},
+    {"match_id":"match:blast-rivals-2026-season-1-003","date":"2026-05-02","team_a":"Natus Vincere","team_b":"FaZe","score_a":2,"score_b":0,"best_of":3,"source_url":"https://www.hltv.org/matches/2393348/natus-vincere-vs-faze-blast-rivals-2026-season-1"},
+    {"match_id":"match:blast-rivals-2026-season-1-004","date":"2026-05-02","team_a":"GamerLegion","team_b":"Astralis","score_a":2,"score_b":0,"best_of":3,"source_url":"https://www.hltv.org/matches/2393347/gamerlegion-vs-astralis-blast-rivals-2026-season-1"},
+    {"match_id":"match:blast-rivals-2026-season-1-005","date":"2026-05-01","team_a":"G2","team_b":"FaZe","score_a":1,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2393346/g2-vs-faze-blast-rivals-2026-season-1"},
+    {"match_id":"match:blast-rivals-2026-season-1-006","date":"2026-04-30","team_a":"Natus Vincere","team_b":"GamerLegion","score_a":2,"score_b":0,"best_of":3,"source_url":"https://www.hltv.org/matches/2393336/natus-vincere-vs-gamerlegion-blast-rivals-2026-season-1"},
+    {"match_id":"match:blast-rivals-2026-season-1-007","date":"2026-04-30","team_a":"FaZe","team_b":"FURIA","score_a":2,"score_b":1,"best_of":3,"source_url":"https://www.hltv.org/matches/2393335/faze-vs-furia-blast-rivals-2026-season-1"},
+    {"match_id":"match:blast-rivals-2026-season-1-008","date":"2026-04-30","team_a":"Vitality","team_b":"G2","score_a":2,"score_b":1,"best_of":3,"source_url":"https://www.hltv.org/matches/2393334/vitality-vs-g2-blast-rivals-2026-season-1"},
+    {"match_id":"match:blast-rivals-2026-season-1-009","date":"2026-04-30","team_a":"FUT","team_b":"Astralis","score_a":0,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2393333/fut-vs-astralis-blast-rivals-2026-season-1"},
+    {"match_id":"match:blast-rivals-2026-season-1-010","date":"2026-04-29","team_a":"FURIA","team_b":"GamerLegion","score_a":1,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2393322/furia-vs-gamerlegion-blast-rivals-2026-season-1"},
+    {"match_id":"match:blast-rivals-2026-season-1-011","date":"2026-04-29","team_a":"Natus Vincere","team_b":"FaZe","score_a":2,"score_b":0,"best_of":3,"source_url":"https://www.hltv.org/matches/2393321/natus-vincere-vs-faze-blast-rivals-2026-season-1"},
+    {"match_id":"match:blast-rivals-2026-season-1-012","date":"2026-04-29","team_a":"Astralis","team_b":"G2","score_a":0,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2393320/astralis-vs-g2-blast-rivals-2026-season-1"},
+    {"match_id":"match:blast-rivals-2026-season-1-013","date":"2026-04-29","team_a":"Vitality","team_b":"FUT","score_a":2,"score_b":1,"best_of":3,"source_url":"https://www.hltv.org/matches/2393319/vitality-vs-fut-blast-rivals-2026-season-1"}
+  ]
+}

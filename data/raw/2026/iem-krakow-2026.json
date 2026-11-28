@@ -1,0 +1,50 @@
+{
+  "event": {
+    "event_id": "event:iem-krakow-2026",
+    "name": "IEM Kraków 2026",
+    "tier": "S",
+    "is_lan": true,
+    "format": "Two double-elimination groups followed by playoffs",
+    "start_date": "2026-01-31",
+    "end_date": "2026-02-08",
+    "is_major": false,
+    "source_url": "https://www.hltv.org/events/8240/iem-krakw-2026",
+    "expected_match_count": 30,
+    "provenance": {
+      "retrieved_on": "2026-11-27",
+      "verified_by": "Copilot-assisted manual HLTV review"
+    }
+  },
+  "matches": [
+    {"match_id":"match:iem-krakow-2026-001","date":"2026-02-08","team_a":"FURIA","team_b":"Vitality","score_a":1,"score_b":3,"best_of":5,"source_url":"https://www.hltv.org/matches/2389666/furia-vs-vitality-iem-krakw-2026"},
+    {"match_id":"match:iem-krakow-2026-002","date":"2026-02-08","team_a":"Spirit","team_b":"MOUZ","score_a":2,"score_b":0,"best_of":3,"source_url":"https://www.hltv.org/matches/2389665/spirit-vs-mouz-iem-krakw-2026"},
+    {"match_id":"match:iem-krakow-2026-003","date":"2026-02-07","team_a":"Vitality","team_b":"MOUZ","score_a":2,"score_b":0,"best_of":3,"source_url":"https://www.hltv.org/matches/2389664/vitality-vs-mouz-iem-krakw-2026"},
+    {"match_id":"match:iem-krakow-2026-004","date":"2026-02-07","team_a":"Spirit","team_b":"FURIA","score_a":1,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2389663/spirit-vs-furia-iem-krakw-2026"},
+    {"match_id":"match:iem-krakow-2026-005","date":"2026-02-06","team_a":"G2","team_b":"MOUZ","score_a":0,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2389662/g2-vs-mouz-iem-krakw-2026"},
+    {"match_id":"match:iem-krakow-2026-006","date":"2026-02-06","team_a":"FURIA","team_b":"Aurora","score_a":2,"score_b":0,"best_of":3,"source_url":"https://www.hltv.org/matches/2389661/furia-vs-aurora-iem-krakw-2026"},
+    {"match_id":"match:iem-krakow-2026-007","date":"2026-02-03","team_a":"Falcons","team_b":"MOUZ","score_a":0,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2389660/falcons-vs-mouz-iem-krakw-2026"},
+    {"match_id":"match:iem-krakow-2026-008","date":"2026-02-03","team_a":"Vitality","team_b":"Aurora","score_a":2,"score_b":0,"best_of":3,"source_url":"https://www.hltv.org/matches/2389658/vitality-vs-aurora-iem-krakw-2026"},
+    {"match_id":"match:iem-krakow-2026-009","date":"2026-02-03","team_a":"G2","team_b":"Spirit","score_a":1,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2389659/g2-vs-spirit-iem-krakw-2026"},
+    {"match_id":"match:iem-krakow-2026-010","date":"2026-02-03","team_a":"Astralis","team_b":"FURIA","score_a":1,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2389657/astralis-vs-furia-iem-krakw-2026"},
+    {"match_id":"match:iem-krakow-2026-011","date":"2026-02-03","team_a":"MOUZ","team_b":"FaZe","score_a":2,"score_b":0,"best_of":3,"source_url":"https://www.hltv.org/matches/2389655/mouz-vs-faze-iem-krakw-2026"},
+    {"match_id":"match:iem-krakow-2026-012","date":"2026-02-03","team_a":"3DMAX","team_b":"Falcons","score_a":0,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2389656/3dmax-vs-falcons-iem-krakw-2026"},
+    {"match_id":"match:iem-krakow-2026-013","date":"2026-02-02","team_a":"FURIA","team_b":"Natus Vincere","score_a":2,"score_b":1,"best_of":3,"source_url":"https://www.hltv.org/matches/2389653/furia-vs-natus-vincere-iem-krakw-2026"},
+    {"match_id":"match:iem-krakow-2026-014","date":"2026-02-02","team_a":"FUT","team_b":"Astralis","score_a":1,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2389654/fut-vs-astralis-iem-krakw-2026"},
+    {"match_id":"match:iem-krakow-2026-015","date":"2026-02-02","team_a":"NRG","team_b":"Falcons","score_a":1,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2389652/nrg-vs-falcons-iem-krakw-2026"},
+    {"match_id":"match:iem-krakow-2026-016","date":"2026-02-02","team_a":"FaZe","team_b":"BC.Game","score_a":2,"score_b":1,"best_of":3,"source_url":"https://www.hltv.org/matches/2389650/faze-vs-bcgame-iem-krakw-2026"},
+    {"match_id":"match:iem-krakow-2026-017","date":"2026-02-02","team_a":"MOUZ","team_b":"Aurora","score_a":0,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2389651/mouz-vs-aurora-iem-krakw-2026"},
+    {"match_id":"match:iem-krakow-2026-018","date":"2026-02-02","team_a":"3DMAX","team_b":"Vitality","score_a":0,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2389649/3dmax-vs-vitality-iem-krakw-2026"},
+    {"match_id":"match:iem-krakow-2026-019","date":"2026-02-01","team_a":"PARIVISION","team_b":"Astralis","score_a":1,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2389648/parivision-vs-astralis-iem-krakw-2026"},
+    {"match_id":"match:iem-krakow-2026-020","date":"2026-02-01","team_a":"Natus Vincere","team_b":"Spirit","score_a":0,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2389647/natus-vincere-vs-spirit-iem-krakw-2026"},
+    {"match_id":"match:iem-krakow-2026-021","date":"2026-02-01","team_a":"The MongolZ","team_b":"FURIA","score_a":1,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2389646/the-mongolz-vs-furia-iem-krakw-2026"},
+    {"match_id":"match:iem-krakow-2026-022","date":"2026-02-01","team_a":"G2","team_b":"FUT","score_a":2,"score_b":1,"best_of":3,"source_url":"https://www.hltv.org/matches/2389645/g2-vs-fut-iem-krakw-2026"},
+    {"match_id":"match:iem-krakow-2026-023","date":"2026-02-01","team_a":"Falcons","team_b":"Aurora","score_a":1,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2389644/falcons-vs-aurora-iem-krakw-2026"},
+    {"match_id":"match:iem-krakow-2026-024","date":"2026-02-01","team_a":"MOUZ","team_b":"NRG","score_a":2,"score_b":0,"best_of":3,"source_url":"https://www.hltv.org/matches/2389643/mouz-vs-nrg-iem-krakw-2026"},
+    {"match_id":"match:iem-krakow-2026-025","date":"2026-01-31","team_a":"Vitality","team_b":"BC.Game","score_a":2,"score_b":0,"best_of":3,"source_url":"https://www.hltv.org/matches/2389641/vitality-vs-bcgame-iem-krakw-2026"},
+    {"match_id":"match:iem-krakow-2026-026","date":"2026-01-31","team_a":"FaZe","team_b":"3DMAX","score_a":0,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2389642/faze-vs-3dmax-iem-krakw-2026"},
+    {"match_id":"match:iem-krakow-2026-027","date":"2026-01-31","team_a":"Spirit","team_b":"Astralis","score_a":2,"score_b":0,"best_of":3,"source_url":"https://www.hltv.org/matches/2389640/spirit-vs-astralis-iem-krakw-2026"},
+    {"match_id":"match:iem-krakow-2026-028","date":"2026-01-31","team_a":"FURIA","team_b":"FUT","score_a":0,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2389637/furia-vs-fut-iem-krakw-2026"},
+    {"match_id":"match:iem-krakow-2026-029","date":"2026-01-31","team_a":"Natus Vincere","team_b":"PARIVISION","score_a":2,"score_b":1,"best_of":3,"source_url":"https://www.hltv.org/matches/2389639/natus-vincere-vs-parivision-iem-krakw-2026"},
+    {"match_id":"match:iem-krakow-2026-030","date":"2026-01-31","team_a":"The MongolZ","team_b":"G2","score_a":0,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2389638/the-mongolz-vs-g2-iem-krakw-2026"}
+  ]
+}

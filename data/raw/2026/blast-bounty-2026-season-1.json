@@ -1,0 +1,44 @@
+{
+  "event": {
+    "event_id": "event:blast-bounty-2026-season-1",
+    "name": "BLAST Bounty 2026 Season 1",
+    "tier": "S",
+    "is_lan": false,
+    "format": "32-team single elimination",
+    "start_date": "2026-01-13",
+    "end_date": "2026-01-18",
+    "is_major": false,
+    "source_url": "https://www.hltv.org/events/8876/blast-bounty-2026-season-1",
+    "expected_match_count": 24,
+    "provenance": {
+      "retrieved_on": "2026-11-27",
+      "verified_by": "Copilot-assisted manual HLTV review"
+    }
+  },
+  "matches": [
+    {"match_id":"match:blast-bounty-2026-season-1-001","date":"2026-01-18","team_a":"FUT","team_b":"FURIA","score_a":1,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2389274/fut-vs-furia-blast-bounty-2026-season-1"},
+    {"match_id":"match:blast-bounty-2026-season-1-002","date":"2026-01-18","team_a":"EYEBALLERS","team_b":"Vitality","score_a":0,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2389273/eyeballers-vs-vitality-blast-bounty-2026-season-1"},
+    {"match_id":"match:blast-bounty-2026-season-1-003","date":"2026-01-18","team_a":"Inner Circle","team_b":"Spirit","score_a":0,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2389272/inner-circle-vs-spirit-blast-bounty-2026-season-1"},
+    {"match_id":"match:blast-bounty-2026-season-1-004","date":"2026-01-18","team_a":"PARIVISION","team_b":"Astralis","score_a":2,"score_b":0,"best_of":3,"source_url":"https://www.hltv.org/matches/2389271/parivision-vs-astralis-blast-bounty-2026-season-1"},
+    {"match_id":"match:blast-bounty-2026-season-1-005","date":"2026-01-17","team_a":"Monte","team_b":"Falcons","score_a":0,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2389270/monte-vs-falcons-blast-bounty-2026-season-1"},
+    {"match_id":"match:blast-bounty-2026-season-1-006","date":"2026-01-17","team_a":"GamerLegion","team_b":"Aurora","score_a":2,"score_b":1,"best_of":3,"source_url":"https://www.hltv.org/matches/2389269/gamerlegion-vs-aurora-blast-bounty-2026-season-1"},
+    {"match_id":"match:blast-bounty-2026-season-1-007","date":"2026-01-17","team_a":"Gentle Mates","team_b":"Liquid","score_a":1,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2389268/gentle-mates-vs-liquid-blast-bounty-2026-season-1"},
+    {"match_id":"match:blast-bounty-2026-season-1-008","date":"2026-01-17","team_a":"paiN","team_b":"HEROIC","score_a":0,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2389267/pain-vs-heroic-blast-bounty-2026-season-1"},
+    {"match_id":"match:blast-bounty-2026-season-1-009","date":"2026-01-16","team_a":"9INE","team_b":"FURIA","score_a":0,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2389261/9ine-vs-furia-blast-bounty-2026-season-1"},
+    {"match_id":"match:blast-bounty-2026-season-1-010","date":"2026-01-16","team_a":"BETBOOM","team_b":"paiN","score_a":0,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2389251/betboom-vs-pain-blast-bounty-2026-season-1"},
+    {"match_id":"match:blast-bounty-2026-season-1-011","date":"2026-01-16","team_a":"SINNERS","team_b":"Spirit","score_a":0,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2389265/sinners-vs-spirit-blast-bounty-2026-season-1"},
+    {"match_id":"match:blast-bounty-2026-season-1-012","date":"2026-01-16","team_a":"ENCE","team_b":"PARIVISION","score_a":0,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2389262/ence-vs-parivision-blast-bounty-2026-season-1"},
+    {"match_id":"match:blast-bounty-2026-season-1-013","date":"2026-01-15","team_a":"ECSTATIC","team_b":"Falcons","score_a":0,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2389266/ecstatic-vs-falcons-blast-bounty-2026-season-1"},
+    {"match_id":"match:blast-bounty-2026-season-1-014","date":"2026-01-15","team_a":"Ninjas in Pyjamas","team_b":"Liquid","score_a":1,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2389256/ninjas-in-pyjamas-vs-liquid-blast-bounty-2026-season-1"},
+    {"match_id":"match:blast-bounty-2026-season-1-015","date":"2026-01-15","team_a":"Inner Circle","team_b":"3DMAX","score_a":2,"score_b":1,"best_of":3,"source_url":"https://www.hltv.org/matches/2389259/inner-circle-vs-3dmax-blast-bounty-2026-season-1"},
+    {"match_id":"match:blast-bounty-2026-season-1-016","date":"2026-01-15","team_a":"M80","team_b":"Gentle Mates","score_a":0,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2389253/m80-vs-gentle-mates-blast-bounty-2026-season-1"},
+    {"match_id":"match:blast-bounty-2026-season-1-017","date":"2026-01-14","team_a":"Virtus.pro","team_b":"Vitality","score_a":0,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2389263/virtuspro-vs-vitality-blast-bounty-2026-season-1"},
+    {"match_id":"match:blast-bounty-2026-season-1-018","date":"2026-01-14","team_a":"Monte","team_b":"Natus Vincere","score_a":2,"score_b":1,"best_of":3,"source_url":"https://www.hltv.org/matches/2389264/monte-vs-natus-vincere-blast-bounty-2026-season-1"},
+    {"match_id":"match:blast-bounty-2026-season-1-019","date":"2026-01-14","team_a":"Friendly Campers","team_b":"HEROIC","score_a":0,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2389257/friendly-campers-vs-heroic-blast-bounty-2026-season-1"},
+    {"match_id":"match:blast-bounty-2026-season-1-020","date":"2026-01-14","team_a":"Passion UA","team_b":"GamerLegion","score_a":1,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2389254/passion-ua-vs-gamerlegion-blast-bounty-2026-season-1"},
+    {"match_id":"match:blast-bounty-2026-season-1-021","date":"2026-01-13","team_a":"HOTU","team_b":"Aurora","score_a":1,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2389255/hotu-vs-aurora-blast-bounty-2026-season-1"},
+    {"match_id":"match:blast-bounty-2026-season-1-022","date":"2026-01-13","team_a":"fnatic","team_b":"Astralis","score_a":1,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2389252/fnatic-vs-astralis-blast-bounty-2026-season-1"},
+    {"match_id":"match:blast-bounty-2026-season-1-023","date":"2026-01-13","team_a":"EYEBALLERS","team_b":"FaZe","score_a":2,"score_b":1,"best_of":3,"source_url":"https://www.hltv.org/matches/2389258/eyeballers-vs-faze-blast-bounty-2026-season-1"},
+    {"match_id":"match:blast-bounty-2026-season-1-024","date":"2026-01-13","team_a":"OG","team_b":"FUT","score_a":0,"score_b":2,"best_of":3,"source_url":"https://www.hltv.org/matches/2389260/og-vs-fut-blast-bounty-2026-season-1"}
+  ]
+}
